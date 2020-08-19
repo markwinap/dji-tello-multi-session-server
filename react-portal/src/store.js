@@ -19,6 +19,14 @@ const initialState = {
       or: false,
     },
   ],
+  welcomeDialog: true,
+  name: `Player`,
+  server: 'https://',
+  emoji: {
+    id: 'sunglasses',
+    name: 'Smiling Face with Sunglasses',
+    native: '😎',
+  },
   status: 'Connected',
   battery: 70,
   messageQueue: [
@@ -100,6 +108,14 @@ const StateProvider = ({ children }) => {
         return { ...state, ...{ battery: action.value } };
       case 'set-messageQueue':
         return { ...state, ...{ messageQueue: action.value } };
+      case 'set-emoji':
+        return { ...state, ...{ emoji: action.value } };
+      case 'set-server':
+        return { ...state, ...{ server: action.value } };
+      case 'set-name':
+        return { ...state, ...{ name: action.value } };
+      case 'set-welcome-dialog':
+        return { ...state, ...{ welcomeDialog: action.value } };
       default:
         throw new Error();
     }

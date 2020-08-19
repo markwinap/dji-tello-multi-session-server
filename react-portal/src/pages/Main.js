@@ -12,7 +12,8 @@ import BattStatus from '../components/BattStatus';
 import CommandsQueue from '../components/CommandsQueue';
 import CommandsTextBox from '../components/CommandsTextBox';
 import CommandsButtons from '../components/CommandsButtons';
-//Store
+import WelcomeDialog from '../components/WelcomeDialog';
+
 //Store
 import { store } from '../store.js';
 
@@ -47,6 +48,10 @@ export default function SimpleContainer() {
   return (
     <React.Fragment>
       <CssBaseline />
+      <WelcomeDialog
+        title="Welcome to Tello drone test app!"
+        description="Change your name, emoji, and set the correct server!"
+      />
       <Box className={classes.box} height="100%" width="100%">
         <Grid className={classes.container} container spacing={2}>
           <Grid item xs={8}></Grid>
