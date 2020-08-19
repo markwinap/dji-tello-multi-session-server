@@ -1,44 +1,10 @@
 import React from 'react';
-import ScrollToBottom from 'react-scroll-to-bottom';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import {
-  Box,
-  Typography,
-  Icon,
-  GridList,
-  GridListTile,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Avatar,
-  Divider,
-  TextField,
-  Paper,
-  InputBase,
-  IconButton,
-  Grid,
-  Button,
-} from '@material-ui/core';
-import {
-  Send,
-  Menu,
-  Search,
-  Directions,
-  AccessAlarm,
-  BatteryUnknown,
-  BatteryAlert,
-  Battery20,
-  Battery30,
-  Battery50,
-  Battery60,
-  Battery80,
-  Battery90,
-  BatteryFull,
-  ChildCare,
-} from '@material-ui/icons';
+import { green } from '@material-ui/core/colors';
+import { TextField, Paper, Grid, Button } from '@material-ui/core';
+import { Send } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -114,8 +80,22 @@ const commandList = [
   },
 ];
 
+const ColorButton = withStyles((theme) => ({
+  root: {
+    color: theme.palette.getContrastText(green[500]),
+    backgroundColor: green[500],
+    '&:hover': {
+      backgroundColor: green[700],
+    },
+  },
+  label: {
+    color: '#ffffff',
+  },
+}))(Button);
+
 export default function CommandsTextBox(props) {
   const { title, status, titleSize, messages, userId } = props;
+
   const classes = useStyles();
 
   return (
@@ -149,7 +129,7 @@ export default function CommandsTextBox(props) {
             </Paper>
           </Grid>
           <Grid item xs={3}>
-            <Button
+            <ColorButton
               fullWidth
               variant="contained"
               color="primary"
@@ -157,7 +137,7 @@ export default function CommandsTextBox(props) {
               endIcon={<Send />}
             >
               Send
-            </Button>
+            </ColorButton>
           </Grid>
         </Grid>
       </div>

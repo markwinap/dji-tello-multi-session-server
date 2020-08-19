@@ -21,18 +21,11 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
   },
   newRoot: {
-    height: 400,
+    height: 350,
     backgroundColor: '#e7e7e7',
     width: '100%',
   },
 }));
-
-let tempArr = [];
-for (let i of new Array(200)) {
-  tempArr.push({
-    name: 'sdsd',
-  });
-}
 
 export default function CommandsQueue(props) {
   const { title, status, titleSize, messages, userId } = props;

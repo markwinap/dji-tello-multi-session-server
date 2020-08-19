@@ -23,24 +23,7 @@ import {
   Button,
   ButtonGroup,
 } from '@material-ui/core';
-import {
-  Send,
-  Menu,
-  Search,
-  Directions,
-  AccessAlarm,
-  BatteryUnknown,
-  BatteryAlert,
-  Battery20,
-  Battery30,
-  Battery50,
-  Battery60,
-  Battery80,
-  Battery90,
-  BatteryFull,
-  ChildCare,
-} from '@material-ui/icons';
-
+import { ErrorOutline } from '@material-ui/icons';
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: '2px 4px',
@@ -79,17 +62,46 @@ export default function CommandsButtons(props) {
         <Grid
           container
           direction="column"
-          justify="space-between"
+          justify="center"
           alignItems="stretch"
           spacing={2}
         >
-          <Grid item>
-            <Paper>sdsds</Paper>
+          <Grid item xs={12}>
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="flex-end"
+              spacing={2}
+            >
+              <Grid item xs={6}>
+                <ButtonGroup
+                  fullWidth
+                  size="large"
+                  color="default"
+                  variant="contained"
+                >
+                  <Button>Take Off</Button>
+                  <Button>Land</Button>
+                </ButtonGroup>
+              </Grid>
+              <Grid item xs={6}>
+                <ButtonGroup
+                  fullWidth
+                  size="large"
+                  color="default"
+                  variant="contained"
+                >
+                  <Button>Rotate CCW</Button>
+                  <Button>Rotate CW</Button>
+                </ButtonGroup>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item>
             <ButtonGroup
               fullWidth
-              //size="large"
+              size="large"
               color="primary"
               variant="contained"
             >
@@ -100,8 +112,13 @@ export default function CommandsButtons(props) {
             </ButtonGroup>
           </Grid>
           <Grid item>
-            <Button variant="contained" fullWidth color="secondary">
-              Secondary
+            <Button
+              variant="contained"
+              fullWidth
+              color="secondary"
+              startIcon={<ErrorOutline />}
+            >
+              Emergency Stop
             </Button>
           </Grid>
         </Grid>
