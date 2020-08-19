@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -9,6 +9,12 @@ import { red } from '@material-ui/core/colors';
 
 //Components
 import BattStatus from '../components/BattStatus';
+import CommandsQueue from '../components/CommandsQueue';
+import CommandsTextBox from '../components/CommandsTextBox';
+import CommandsButtons from '../components/CommandsButtons';
+//Store
+//Store
+import { store } from '../store.js';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,6 +42,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SimpleContainer() {
   const classes = useStyles();
+  const globalState = useContext(store);
+  const { dispatch, state } = globalState;
   return (
     <React.Fragment>
       <CssBaseline />
@@ -45,16 +53,40 @@ export default function SimpleContainer() {
           <Grid className={classes.col} item xs={4}>
             <Grid
               className={classes.container}
-              container
               direction="column"
-              //justify="center"
+              justify="space-between"
               alignItems="stretch"
             >
               <Grid item>
-                <BattStatus status="Connected" level={70} />
+                <BattStatus
+                  title={state.status}
+                  titleSize="h4"
+                  level={state.battery}
+                />
               </Grid>
               <Grid item>
-                <BattStatus status="Connected" level={70} />
+                <CommandsQueue
+                  messages={state.messageQueue}
+                  title="Messages"
+                  titleSize="h5"
+                  userId={0}
+                />
+              </Grid>
+              <Grid item>
+                <CommandsTextBox
+                  messages={state.messageQueue}
+                  title="Messages"
+                  titleSize="h5"
+                  userId={0}
+                />
+              </Grid>
+              <Grid item>
+                <CommandsButtons
+                  messages={state.messageQueue}
+                  title="Messages"
+                  titleSize="h5"
+                  userId={0}
+                />
               </Grid>
             </Grid>
           </Grid>

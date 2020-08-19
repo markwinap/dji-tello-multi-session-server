@@ -1,11 +1,9 @@
 import React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import { Box, Typography, Icon } from '@material-ui/core';
+
+import { Typography, Grid } from '@material-ui/core';
 import {
-  AccessAlarm,
   BatteryUnknown,
   BatteryAlert,
   Battery20,
@@ -45,8 +43,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SimpleContainer(props) {
-  const { level, status } = props;
+export default function BattStatus(props) {
+  const { level, title, titleSize } = props;
   const classes = useStyles();
   const Batterylevel = ({ level }) => {
     switch (true) {
@@ -81,8 +79,12 @@ export default function SimpleContainer(props) {
         spacing={0}
       >
         <Grid item xs={4}>
-          <Typography className={classes.title} variant="h4" gutterBottom>
-            {status}
+          <Typography
+            className={classes.title}
+            variant={titleSize}
+            gutterBottom
+          >
+            {title}
           </Typography>
         </Grid>
         <Grid item xs={1}>
