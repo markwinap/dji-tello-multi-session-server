@@ -96,6 +96,7 @@ export default function WelcomeDialog(props) {
         <Picker
           emoji={state?.emoji?.id}
           title="Hi!!!"
+          emojiTooltip={false}
           onSelect={(e) => {
             console.log(e);
 
