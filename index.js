@@ -1,35 +1,36 @@
-//Env variables
+// Env variables
 require('dotenv').config();
-//FILE SYSTEM READ WRITE FILES
+// FILE SYSTEM READ WRITE FILES
 const fs = require('fs');
-//CONSOLE COLORS
+// CONSOLE COLORS
 const colors = require('colors');
-//UPP
+// UPP
 const dgram = require('dgram');
+
 const server = dgram.createSocket('udp4'); // UDP SERVER IPv4 FOR SENDING COMMANDS AND RECEIVING COMMAND CONFIRMATION
 const status = dgram.createSocket('udp4'); // UDP SERVER IPv4 FOR RECEIVING STATUS
 const video = dgram.createSocket('udp4'); // UDP SERVER IPv4 FOR RECEIVING VIDEO RAW H264 ENCODED YUV420p
-//WS
-const WebSocket = require('ws'); //WEBSOCKET
-//VARIABLES
-let videoBuff = []; //VIDEO BUFFER
-let counter = 0; //COUNTER FOR VIDEO BUFFER FRAMES
-let temp_input = '';
+// WS
+const WebSocket = require('ws'); // WEBSOCKET
+// VARIABLES
+let videoBuff = []; // VIDEO BUFFER
+let counter = 0; // COUNTER FOR VIDEO BUFFER FRAMES
+const temp_input = '';
 let stats = false;
 let bat_prev = '';
 
-//CONSOLE WELCOME
-fs.readFile('banner/_2', 'utf8', function (err, banner) {
+// CONSOLE WELCOME
+fs.readFile('banner/_2', 'utf8', (err, banner) => {
   console.log(banner.cyan);
   console.log('1 - RUN THIS SCRIPT'.white);
   console.log('2 - USE WEB APP TO CONTROL DRONE'.white);
   console.log('TO STOP THE SERVER USE'.white);
-  console.log(`CTR+C`.inverse);
+  console.log('CTR+C'.inverse);
   console.log('HAVE FUN (╯°□°）╯︵ ┻━┻'.cyan);
   console.log('Author: Marco Martinez markwinap@gmail.com'.inverse);
 });
-//###WEBSOCKET### SERVER GAMEPAD & VIDEO
-//const websocket = new WebSocket.Server({ port: process.env.WS_PORT });
+// ###WEBSOCKET### SERVER GAMEPAD & VIDEO
+// const websocket = new WebSocket.Server({ port: process.env.WS_PORT });
 const websocket = new WebSocket.Server({
   port: process.env.WS_PORT,
   backlog: 1,
@@ -54,15 +55,15 @@ const websocket = new WebSocket.Server({
   },
 });
 
-websocket.on('connection', function connection(websocket) {
+websocket.on('connection', (websocket) => {
   console.log('Socket connected. sending data...');
   bat_prev = '';
-  websocket.on('error', function error(error) {
+  websocket.on('error', (error) => {
     console.log('WebSocket error');
   });
-  websocket.on('message', function incoming(msg) {
-    let obj = JSON.parse(msg);
-    //console.log(obj); //Debug
+  websocket.on('message', (msg) => {
+    const obj = JSON.parse(msg);
+    // console.log(obj); //Debug
     switch (obj.action) {
       case 'command':
         sendCMD(obj.data);
@@ -70,7 +71,7 @@ websocket.on('connection', function connection(websocket) {
       case 'service':
         switch (obj.data) {
           case 'stats':
-            stats = obj.value; //Enable Disable Stats
+            stats = obj.value; // Enable Disable Stats
             break;
           default:
             break;
@@ -80,61 +81,59 @@ websocket.on('connection', function connection(websocket) {
         break;
     }
   });
-  websocket.on('close', function close(msg) {
+  websocket.on('close', (msg) => {
     console.log('WebSocket close');
   });
 });
 
-//UDP CLIENT SERVER
+// UDP CLIENT SERVER
 server.on('error', (err) => {
   console.log(`server error:\n${err.stack}`);
   server.close();
 });
 server.on('message', (msg, rinfo) => {
-  //UNCOMNET FOR DEBUG
+  // UNCOMNET FOR DEBUG
   console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
-  //nextCMD(rinfo.address); //Check if commands available
+  // nextCMD(rinfo.address); //Check if commands available
 });
 server.on('listening', () => {
-  let address = server.address();
-  //UNCOMNET FOR DEBUG
+  const address = server.address();
+  // UNCOMNET FOR DEBUG
   console.log(`UDP CMD RESPONSE SERVER - ${address.address}:${address.port}`);
 });
 server.bind(process.env.TELLO_PORT);
-//UDP STATUS SERVER
-status.on('listening', function () {
-  let address = status.address();
-  //UNCOMNET FOR DEBUG
+// UDP STATUS SERVER
+status.on('listening', () => {
+  const address = status.address();
+  // UNCOMNET FOR DEBUG
   console.log(`UDP STATUS SERVER - ${address.address}:${address.port}`);
 });
-status.on('message', function (message, remote) {
-  //UNCOMNET FOR DEBUG
-  //console.log(`${remote.address}:${remote.port} - ${message}`);
+status.on('message', (message, remote) => {
+  // UNCOMNET FOR DEBUG
+  // console.log(`${remote.address}:${remote.port} - ${message}`);
   const _msg_obj = dataSplit(message.toString());
   if (stats) {
     sendWS(JSON.stringify({ status: _msg_obj }));
-  } else {
-    if (bat_prev !== _msg_obj.bat) {
-      sendWS(JSON.stringify({ status: { bat: _msg_obj.bat } }));
-      bat_prev = _msg_obj.bat;
-    }
+  } else if (bat_prev !== _msg_obj.bat) {
+    sendWS(JSON.stringify({ status: { bat: _msg_obj.bat } }));
+    bat_prev = _msg_obj.bat;
   }
 });
 status.bind(process.env.TELLO_PORT_STATUS);
-//###UDP### VIDEO
-//INPUT
-//RAW RAW H264 DIVIDED IN MULTIPLE MESSAGES PER FRAME
+// ###UDP### VIDEO
+// INPUT
+// RAW RAW H264 DIVIDED IN MULTIPLE MESSAGES PER FRAME
 video.on('error', (err) => {
   console.log(`server error:\n${err.stack}`);
   video.close();
 });
 video.on('message', (msg, rinfo) => {
-  let buf = Buffer.from(msg);
+  const buf = Buffer.from(msg);
   if (buf.indexOf(Buffer.from([0, 0, 0, 1])) != -1) {
-    //FIND IF FIRST PART OF FRAME
+    // FIND IF FIRST PART OF FRAME
     counter++;
     if (counter == 3) {
-      //COLLECT 3 FRAMES AND SEND TO WEBSOCKET
+      // COLLECT 3 FRAMES AND SEND TO WEBSOCKET
       sendWS(JSON.stringify({ video: Buffer.concat(videoBuff) }));
       counter = 0;
       videoBuff.length = 0;
@@ -146,36 +145,36 @@ video.on('message', (msg, rinfo) => {
   }
 });
 video.on('listening', () => {
-  let address = video.address();
-  //UNCOMNET FOR DEBUG
+  const address = video.address();
+  // UNCOMNET FOR DEBUG
   console.log(`UDP VIDEO SERVER - ${address.address}:${address.port}`);
 });
 video.bind(process.env.TELLO_PORT_VIDEO);
 
 function dataSplit(str) {
-  //Create JSON OBJ from String  "key:value;"
-  let data = {};
-  let arrCMD = str.split(';');
-  for (let i in arrCMD) {
-    let tmp = arrCMD[i].split(':');
+  // Create JSON OBJ from String  "key:value;"
+  const data = {};
+  const arrCMD = str.split(';');
+  for (const i in arrCMD) {
+    const tmp = arrCMD[i].split(':');
     if (tmp.length > 1) {
       data[tmp[0]] = tmp[1];
     }
   }
   return data;
 }
-//###OTHER FUNCTIONS
+// ###OTHER FUNCTIONS
 function sendCMD(command) {
-  //SEND BYTE ARRAY TO TELLO OVER UDP
+  // SEND BYTE ARRAY TO TELLO OVER UDP
   return new Promise((resolve, reject) => {
-    let msg = Buffer.from(command);
+    const msg = Buffer.from(command);
     server.send(
       msg,
       0,
       msg.length,
       process.env.TELLO_PORT,
       process.env.TELLO_IP,
-      function (err) {
+      (err) => {
         // tello - 192.168.10.1
         if (err) {
           console.error(err);
@@ -186,12 +185,12 @@ function sendCMD(command) {
   });
 }
 function sendWS(data) {
-  websocket.clients.forEach(function each(client) {
+  websocket.clients.forEach((client) => {
     if (client.readyState === 1 && client.bufferedAmount === 0) {
       try {
-        client.send(data); //SEND OVER WEBSOCKET
+        client.send(data); // SEND OVER WEBSOCKET
       } catch (e) {
-        console.log(`Sending failed:`, e);
+        console.log('Sending failed:', e);
       }
     }
   });
