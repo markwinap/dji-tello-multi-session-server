@@ -45,15 +45,6 @@ export default function SimpleContainer() {
   const classes = useStyles();
   const globalState = useContext(store);
   const { dispatch, state } = globalState;
-  const refWS = useRef(null);
-
-  useEffect(() => {
-    console.log('=============================');
-    console.log(refWS);
-    return () => {
-      //subscription.unsubscribe();
-    };
-  }, [refWS]);
 
   return (
     <React.Fragment>
@@ -61,7 +52,6 @@ export default function SimpleContainer() {
       <WelcomeDialog
         title="Welcome to Tello drone test app!"
         description="Change your name, emoji, and set the correct server!"
-        ws={refWS}
       />
       <Box className={classes.box} height="100%" width="100%">
         <Grid className={classes.container} container spacing={2}>
@@ -75,7 +65,7 @@ export default function SimpleContainer() {
             >
               <Grid item>
                 <BattStatus
-                  title={state.status}
+                  title={state.status ? 'Online' : 'Offline'}
                   titleSize="h4"
                   level={state.battery}
                 />

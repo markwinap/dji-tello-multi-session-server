@@ -28,7 +28,7 @@ const initialState = {
     name: 'Smiling Face with Sunglasses',
     native: '😎',
   },
-  status: 'Offile',
+  status: false,
   battery: -1,
   messageQueue: [],
 };

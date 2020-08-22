@@ -56,6 +56,7 @@ export default function WelcomeDialog(props) {
   const { title, description, status, titleSize, messages, userId } = props;
   const classes = useStyles();
   const [name, setName] = useLocalStorage('player_name', 'Player');
+
   const [server, setServer] = useLocalStorage(
     'server_address',
     'ws://192.168.1.211:8080'
@@ -63,6 +64,7 @@ export default function WelcomeDialog(props) {
   const globalState = useContext(store);
   const { dispatch, state } = globalState;
   const [openEmoji, setOpenEmoji] = useState(false);
+  const [connectBtn, setConnectBtn] = useState(false);
 
   const [getWS, setWS, sendWS] = useWS();
 
@@ -93,6 +95,7 @@ export default function WelcomeDialog(props) {
 
   const connectWS = () => {
     console.log('Connect WS');
+    setConnectBtn(true);
     setWS(state?.server);
     getWS().addEventListener('open', (e) => {
       console.log('OPEN');
@@ -103,8 +106,9 @@ export default function WelcomeDialog(props) {
       });
       dispatch({
         type: 'set-status',
-        value: 'Online',
+        value: true,
       });
+      setConnectBtn(false);
       //refWS.current.send(JSON.stringify({ action: 'command', data: 'command' }));
       //setSnackbar(true);
       //setSnackbarMsg('Socket Connected');
@@ -127,6 +131,11 @@ export default function WelcomeDialog(props) {
 
     getWS().addEventListener('error', (e) => {
       console.log('Socket Error');
+      dispatch({
+        type: 'set-status',
+        value: false,
+      });
+      setConnectBtn(false);
       //setSnackbar(true);
       //setSnackbarMsg('Socket Error');
     });
@@ -134,8 +143,9 @@ export default function WelcomeDialog(props) {
       console.log('Socket Closed');
       dispatch({
         type: 'set-status',
-        value: 'Offline',
+        value: false,
       });
+      setConnectBtn(false);
       //setSnackbar(true);
       //setSnackbarMsg('Socket Closed');
     });
@@ -166,7 +176,7 @@ export default function WelcomeDialog(props) {
         />
       </Dialog>
       <Dialog
-        open={state?.welcomeDialog}
+        open={!state?.status}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -214,12 +224,9 @@ export default function WelcomeDialog(props) {
           <Button
             variant="outlined"
             color="secondary"
+            disabled={connectBtn}
             onClick={() => {
               connectWS();
-              dispatch({
-                type: 'set-welcome-dialog',
-                value: false,
-              });
             }}
           >
             Connect

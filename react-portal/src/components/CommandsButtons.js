@@ -32,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
   buttonSend: {
     marginLeft: 20,
   },
+  buttonMargin: {
+    marginBottom: 10,
+  },
 }));
 
 export default function CommandsButtons(props) {
@@ -84,14 +87,22 @@ export default function CommandsButtons(props) {
               <Grid item xs={6}>
                 <ButtonGroup
                   fullWidth
-                  size="large"
+                  size="medium"
+                  color="default"
+                  variant="contained"
+                  className={classes.buttonMargin}
+                >
+                  <Button onClick={() => send('up 100')}>Up 100</Button>
+                  <Button onClick={() => send('cc 90')}>Rotate CW 90°</Button>
+                </ButtonGroup>
+                <ButtonGroup
+                  fullWidth
+                  size="medium"
                   color="default"
                   variant="contained"
                 >
-                  <Button onClick={() => send('forward 100')}>
-                    Rotate CCW
-                  </Button>
-                  <Button onClick={() => send('forward 100')}>Rotate CW</Button>
+                  <Button onClick={() => send('down 100')}>Down 100</Button>
+                  <Button onClick={() => send('ccw 90')}>Rotate CCW 90</Button>
                 </ButtonGroup>
               </Grid>
             </Grid>
