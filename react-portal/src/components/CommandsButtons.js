@@ -1,29 +1,13 @@
-import React from 'react';
-import ScrollToBottom from 'react-scroll-to-bottom';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import {
-  Box,
-  Typography,
-  Icon,
-  GridList,
-  GridListTile,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Avatar,
-  Divider,
-  TextField,
-  Paper,
-  InputBase,
-  IconButton,
-  Grid,
-  Button,
-  ButtonGroup,
-} from '@material-ui/core';
+import { Grid, Button, ButtonGroup } from '@material-ui/core';
 import { ErrorOutline } from '@material-ui/icons';
+//Store
+import { store } from '../store.js';
+//Hooks
+import useWS from '../hooks/WS';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: '2px 4px',
@@ -53,6 +37,18 @@ const useStyles = makeStyles((theme) => ({
 export default function CommandsButtons(props) {
   const { title, status, titleSize, messages, userId } = props;
   const classes = useStyles();
+  const globalState = useContext(store);
+  const { dispatch, state } = globalState;
+  const [getWS, setWS, sendWS] = useWS();
+
+  const send = (cmd) => {
+    setWS();
+    sendWS({
+      name: state?.name,
+      emoji: state?.emoji?.native,
+      msg: cmd,
+    });
+  };
 
   return (
     <React.Fragment>
@@ -81,8 +77,8 @@ export default function CommandsButtons(props) {
                   color="default"
                   variant="contained"
                 >
-                  <Button>Take Off</Button>
-                  <Button>Land</Button>
+                  <Button onClick={() => send('takeoff')}>Takeoff</Button>
+                  <Button onClick={() => send('land')}>Land</Button>
                 </ButtonGroup>
               </Grid>
               <Grid item xs={6}>
@@ -92,8 +88,10 @@ export default function CommandsButtons(props) {
                   color="default"
                   variant="contained"
                 >
-                  <Button>Rotate CCW</Button>
-                  <Button>Rotate CW</Button>
+                  <Button onClick={() => send('forward 100')}>
+                    Rotate CCW
+                  </Button>
+                  <Button onClick={() => send('forward 100')}>Rotate CW</Button>
                 </ButtonGroup>
               </Grid>
             </Grid>
@@ -105,10 +103,10 @@ export default function CommandsButtons(props) {
               color="primary"
               variant="contained"
             >
-              <Button>Forward 100</Button>
-              <Button>Backward 100</Button>
-              <Button>Left 100</Button>
-              <Button>Rigth 100</Button>
+              <Button onClick={() => send('forward 100')}>Fwd 100</Button>
+              <Button onClick={() => send('back 100')}>Bwd 100</Button>
+              <Button onClick={() => send('left 100')}>Left 100</Button>
+              <Button onClick={() => send('right 100')}>Rigth 100</Button>
             </ButtonGroup>
           </Grid>
           <Grid item>
@@ -116,6 +114,7 @@ export default function CommandsButtons(props) {
               variant="contained"
               fullWidth
               color="secondary"
+              onClick={() => send('emergency')}
               startIcon={<ErrorOutline />}
             >
               Emergency Stop

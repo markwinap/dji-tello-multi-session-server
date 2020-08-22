@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import 'emoji-mart/css/emoji-mart.css';
 import { Picker } from 'emoji-mart';
 import useLocalStorage from 'react-use-localstorage';
@@ -21,6 +21,8 @@ import { Send } from '@material-ui/icons';
 
 //Store
 import { store } from '../store.js';
+//Hooks
+import useWS from '../hooks/WS';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,10 +56,15 @@ export default function WelcomeDialog(props) {
   const { title, description, status, titleSize, messages, userId } = props;
   const classes = useStyles();
   const [name, setName] = useLocalStorage('player_name', 'Player');
-  const [server, setServer] = useLocalStorage('server_address', 'https://');
+  const [server, setServer] = useLocalStorage(
+    'server_address',
+    'ws://192.168.1.211:8080'
+  );
   const globalState = useContext(store);
   const { dispatch, state } = globalState;
   const [openEmoji, setOpenEmoji] = useState(false);
+
+  const [getWS, setWS, sendWS] = useWS();
 
   useEffect(() => {
     if (name == 'Player') {
@@ -83,6 +90,56 @@ export default function WelcomeDialog(props) {
       //subscription.unsubscribe();
     };
   }, []);
+
+  const connectWS = () => {
+    console.log('Connect WS');
+    setWS(state?.server);
+    getWS().addEventListener('open', (e) => {
+      console.log('OPEN');
+      sendWS({
+        name: state?.name,
+        emoji: state?.emoji?.native,
+        msg: 'Online',
+      });
+      dispatch({
+        type: 'set-status',
+        value: 'Online',
+      });
+      //refWS.current.send(JSON.stringify({ action: 'command', data: 'command' }));
+      //setSnackbar(true);
+      //setSnackbarMsg('Socket Connected');
+    });
+    getWS().addEventListener('message', (e) => {
+      const _data = JSON.parse(e.data);
+      console.log(_data);
+      if (_data.name === 'bat') {
+        dispatch({
+          type: 'set-battery',
+          value: _data.msg,
+        });
+      } else {
+        dispatch({
+          type: 'set-messageQueue',
+          value: _data,
+        });
+      }
+    });
+
+    getWS().addEventListener('error', (e) => {
+      console.log('Socket Error');
+      //setSnackbar(true);
+      //setSnackbarMsg('Socket Error');
+    });
+    getWS().addEventListener('close', (e) => {
+      console.log('Socket Closed');
+      dispatch({
+        type: 'set-status',
+        value: 'Offline',
+      });
+      //setSnackbar(true);
+      //setSnackbarMsg('Socket Closed');
+    });
+  };
 
   return (
     <React.Fragment>
@@ -158,6 +215,7 @@ export default function WelcomeDialog(props) {
             variant="outlined"
             color="secondary"
             onClick={() => {
+              connectWS();
               dispatch({
                 type: 'set-welcome-dialog',
                 value: false,

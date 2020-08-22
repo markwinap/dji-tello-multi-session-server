@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
   titleIcon: {
     color: 'white',
     fontSize: 30,
+    marginBottom: 5,
   },
 }));
 
@@ -78,7 +79,7 @@ export default function BattStatus(props) {
         alignItems="center"
         spacing={0}
       >
-        <Grid item xs={4}>
+        <Grid item xs={2}>
           <Typography
             className={classes.title}
             variant={titleSize}

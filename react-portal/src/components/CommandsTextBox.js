@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { green } from '@material-ui/core/colors';
 import { TextField, Paper, Grid, Button } from '@material-ui/core';
 import { Send } from '@material-ui/icons';
+//Store
+import { store } from '../store.js';
+//Hooks
+import useWS from '../hooks/WS';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -78,6 +82,9 @@ const commandList = [
   {
     name: 'go ',
   },
+  {
+    name: '#',
+  },
 ];
 
 const ColorButton = withStyles((theme) => ({
@@ -95,8 +102,23 @@ const ColorButton = withStyles((theme) => ({
 
 export default function CommandsTextBox(props) {
   const { title, status, titleSize, messages, userId } = props;
-
+  const [textBox, setTextBox] = useState('');
+  const [autoComplete, setAutoComplete] = useState({
+    name: '',
+  });
+  const refWS = useRef(null);
   const classes = useStyles();
+  const globalState = useContext(store);
+  const { dispatch, state } = globalState;
+  const [getWS, setWS, sendWS] = useWS();
+
+  useEffect(() => {
+    console.log('&&&&&&&&&&&&&&');
+    console.log(refWS);
+    return () => {
+      //subscription.unsubscribe();
+    };
+  }, [refWS]);
 
   return (
     <React.Fragment>
@@ -117,11 +139,20 @@ export default function CommandsTextBox(props) {
                 options={commandList}
                 getOptionLabel={(option) => option.name}
                 //style={{ width: 300 }}
+                value={autoComplete}
+                onChange={(event, newValue) => {
+                  if (newValue?.name) {
+                    setTextBox(newValue.name);
+                    setAutoComplete(newValue);
+                  }
+                }}
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     size="small"
                     variant="outlined"
+                    value={textBox}
+                    onChange={(e) => setTextBox(e.currentTarget.value)}
                     placeholder="Type Your Command Input"
                   />
                 )}
@@ -133,6 +164,18 @@ export default function CommandsTextBox(props) {
               fullWidth
               variant="contained"
               color="primary"
+              onClick={() => {
+                setWS();
+                sendWS({
+                  name: state?.name,
+                  emoji: state?.emoji?.native,
+                  msg: textBox,
+                });
+                setTextBox('');
+                setAutoComplete({
+                  name: '',
+                });
+              }}
               //className={classes.buttonSend}
               endIcon={<Send />}
             >

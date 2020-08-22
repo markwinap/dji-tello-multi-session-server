@@ -49,7 +49,7 @@ export default function CommandsQueue(props) {
                 <ListItemAvatar>
                   <Avatar>{e.emoji ? e.emoji : '😀'}</Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={e.name} secondary={e.command} />
+                <ListItemText primary={e.name} secondary={e.msg} />
               </ListItem>
               <Divider />
             </>

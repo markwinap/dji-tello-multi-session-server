@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -45,12 +45,23 @@ export default function SimpleContainer() {
   const classes = useStyles();
   const globalState = useContext(store);
   const { dispatch, state } = globalState;
+  const refWS = useRef(null);
+
+  useEffect(() => {
+    console.log('=============================');
+    console.log(refWS);
+    return () => {
+      //subscription.unsubscribe();
+    };
+  }, [refWS]);
+
   return (
     <React.Fragment>
       <CssBaseline />
       <WelcomeDialog
         title="Welcome to Tello drone test app!"
         description="Change your name, emoji, and set the correct server!"
+        ws={refWS}
       />
       <Box className={classes.box} height="100%" width="100%">
         <Grid className={classes.container} container spacing={2}>

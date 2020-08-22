@@ -19,6 +19,7 @@ const initialState = {
       or: false,
     },
   ],
+  ws: null,
   welcomeDialog: true,
   name: `Player`,
   server: 'https://',
@@ -27,73 +28,9 @@ const initialState = {
     name: 'Smiling Face with Sunglasses',
     native: '😎',
   },
-  status: 'Connected',
-  battery: 70,
-  messageQueue: [
-    {
-      name: 'Marco Martinez',
-      id: 0,
-      command: 'take off',
-      process: true,
-      emoji: '😀',
-    },
-    {
-      name: 'Sergio Gonzales',
-      id: 2,
-      command: 'up 200',
-      process: true,
-      emoji: '😂',
-    },
-    {
-      name: 'Marco Martinez',
-      id: 0,
-      command: 'land',
-      process: false,
-      emoji: '😡',
-    },
-    {
-      name: 'Test Martinez',
-      id: 3,
-      command: 'take off',
-      process: true,
-      emoji: '🥶',
-    },
-    {
-      name: 'Sergio Gonzales',
-      id: 2,
-      command: 'up 200',
-      process: true,
-      emoji: '🤩',
-    },
-    {
-      name: 'Marco Martinez',
-      id: 0,
-      command: 'land',
-      process: false,
-      emoji: '🤩',
-    },
-    {
-      name: 'Marco Martinez',
-      id: 0,
-      command: 'take off',
-      process: true,
-      emoji: '😸',
-    },
-    {
-      name: 'Sergio Gonzales',
-      id: 2,
-      command: 'up 200',
-      process: true,
-      emoji: '👩🏻‍🦰',
-    },
-    {
-      name: 'Marco Martinez',
-      id: 0,
-      command: 'land',
-      process: false,
-      emoji: '👩🏻‍🔬',
-    },
-  ],
+  status: 'Offile',
+  battery: -1,
+  messageQueue: [],
 };
 
 const store = createContext(initialState);
@@ -102,12 +39,16 @@ const { Provider } = store;
 const StateProvider = ({ children }) => {
   const [state, dispatch] = useReducer((state, action) => {
     switch (action.type) {
+      case 'set-ws':
+        return { ...state, ...{ ws: action.value } };
       case 'set-status':
         return { ...state, ...{ status: action.value } };
       case 'set-battery':
         return { ...state, ...{ battery: action.value } };
       case 'set-messageQueue':
-        return { ...state, ...{ messageQueue: action.value } };
+        let messageQueue = [...state.messageQueue];
+        messageQueue.push(action.value);
+        return { ...state, ...{ messageQueue } };
       case 'set-emoji':
         return { ...state, ...{ emoji: action.value } };
       case 'set-server':
