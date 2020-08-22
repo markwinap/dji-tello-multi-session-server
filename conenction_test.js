@@ -60,14 +60,16 @@ function sendWS(data) {
 }
 const sendCMD = (command) => {
   // SEND BYTE ARRAY TO TELLO OVER UDP
-  const msg = Buffer.from(command);
-  mainSocket.send(
-    msg,
-    0,
-    msg.length,
-    process.env.TELLO_PORT,
-    process.env.TELLO_IP
-  );
+  if (udpStatus && wifiStatus) {
+    const msg = Buffer.from(command);
+    mainSocket.send(
+      msg,
+      0,
+      msg.length,
+      process.env.TELLO_PORT,
+      process.env.TELLO_IP
+    );
+  }
 };
 function dataSplit(str) {
   const data = {};
