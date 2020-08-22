@@ -63,8 +63,6 @@ websocket.on('connection', function connection(websocket) {
   });
 });
 
-
-
 function bindMainEvents(socket){
   //UDP CLIENT SERVER
   socket.on('error', (err) => {
