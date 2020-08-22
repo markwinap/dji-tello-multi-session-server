@@ -16,43 +16,47 @@ let wifiStatus = false;//
 let udpStatus = false;
 
 
-//UDP CLIENT SERVER
-mainSocket.on('error', (err) => {
-  console.log(`ERROR :\n${err.stack}`);
-  udpStatus = false;
-  mainSocket.close();
-});
-mainSocket.on('message', (msg, rinfo) => {
-  //UNCOMNET FOR DEBUG
-  console.log(`mainSocket got: ${msg} from ${rinfo.address}:${rinfo.port}`);
-  nextCMD(rinfo.address); //Check if commands available
-});
-mainSocket.on('listening', () => {
-  let address = mainSocket.address();
-  //UNCOMNET FOR DEBUG
-  console.log(`UDP CMD RESPONSE SERVER - ${address.address}:${address.port}`);
-});
-
-statusSocket.on('error', (err) => {
-  console.log(`STATUS ERROR :\n${err.stack}`);
-  udpStatus = false;
-  statusSocket.close();
-});
-statusSocket.on('listening', function () {
-  let address = statusSocket.address();
-  //UNCOMNET FOR DEBUG
-  console.log(`UDP STATUS SERVER - ${address.address}:${address.port}`);
-});
-statusSocket.on('message', function (message, remote) {
-  //UNCOMNET FOR DEBUG
-  console.log('STATUS MSG')
-  //console.log(`${remote.address}:${remote.port} - ${message}`);
-  const _msg_obj = dataSplit(message.toString());
-  console.log(_msg_obj)
-});
 
 
 
+function bindMainEvents(socket){
+  //UDP CLIENT SERVER
+  socket.on('error', (err) => {
+    console.log(`ERROR :\n${err.stack}`);
+    udpStatus = false;
+    mainSocket.close();
+  });
+  socket.on('message', (msg, rinfo) => {
+    //UNCOMNET FOR DEBUG
+    console.log(`mainSocket got: ${msg} from ${rinfo.address}:${rinfo.port}`);
+    //nextCMD(rinfo.address); //Check if commands available
+  });
+  socket.on('listening', () => {
+    let address = mainSocket.address();
+    //UNCOMNET FOR DEBUG
+    console.log(`UDP CMD RESPONSE SERVER - ${address.address}:${address.port}`);
+  });
+}
+function bindStatusEvents(socket){
+  //UDP CLIENT SERVER
+  socket.on('error', (err) => {
+    console.log(`STATUS ERROR :\n${err.stack}`);
+    udpStatus = false;
+    statusSocket.close();
+  });
+  socket.on('listening', function () {
+    let address = statusSocket.address();
+    //UNCOMNET FOR DEBUG
+    console.log(`UDP STATUS SERVER - ${address.address}:${address.port}`);
+  });
+  socket.on('message', function (message, remote) {
+    //UNCOMNET FOR DEBUG
+    console.log('STATUS MSG')
+    //console.log(`${remote.address}:${remote.port} - ${message}`);
+    const _msg_obj = dataSplit(message.toString());
+    console.log(_msg_obj)
+  });
+}
 
 function exectCommand(){
   return new Promise((resolve, reject) => {
@@ -85,16 +89,10 @@ const checkUDP  = async () => {
   if(wifiStatus && !udpStatus){
     console.log('CONNECT SERVER')
     connectUDPServers()
-
   }
   if(!wifiStatus && udpStatus){
     console.log('CLOSE SERVER')
     disconnectUDPServers()
-
-  }
-  if(wifiStatus && udpStatus){
-    console.log('SEND CMD')
-    sendCMD('command')
   }
 }
 const checkWIFI = async () => {
@@ -111,17 +109,13 @@ const checkWIFI = async () => {
   }
 }
 const connectUDPServers = async () => {
-  mainSocket = dgram.createSocket('udp4');
   udpStatus = true;
-  mainSocket.bind({
-    address: process.env.TELLO_IP,
-    port: process.env.TELLO_PORT
-  });
+  mainSocket = dgram.createSocket('udp4');
+  bindMainEvents(mainSocket)
+  mainSocket.bind(process.env.TELLO_PORT);
   statusSocket = dgram.createSocket('udp4');
-  statusSocket.bind({
-    address: process.env.TELLO_IP,
-    port: process.env.TELLO_PORT_STATUS
-  });
+  bindStatusEvents(statusSocket)
+  statusSocket.bind(process.env.TELLO_PORT_STATUS);
   sendCMD('command')
 }
 const disconnectUDPServers = () => {
@@ -137,9 +131,10 @@ const sendCMD = (command) => {
     let msg = Buffer.from(command);
     mainSocket.send(
       msg,
+      0,
+      msg.length,
       process.env.TELLO_PORT,
-      process.env.TELLO_IP,
-      (e)=> console.log(e)
+      process.env.TELLO_IP
     );
 }
 function dataSplit(str) {
