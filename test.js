@@ -13,7 +13,7 @@ const port_video = 11111; //TELLO VIDEO PORT
 const WebSocket = require('ws'); //WEBSOCKET
 const port_websocket = 8080; //WEBSOCKET PORT
 //VARIABLES
-const tello_default = '192.168.10.1';
+const tello_default = '192.168.10.2';
 let videoBuff = []; //VIDEO BUFFER
 let counter = 0; //COUNTER FOR VIDEO BUFFER FRAMES
 let temp_input = '';
