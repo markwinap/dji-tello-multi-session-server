@@ -2,8 +2,14 @@ import React, { useContext, useState, useEffect, useRef } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { green } from '@material-ui/core/colors';
-import { TextField, Paper, Grid, Button } from '@material-ui/core';
+import { green, red } from '@material-ui/core/colors';
+import {
+  TextField,
+  Paper,
+  Grid,
+  Button,
+  CircularProgress,
+} from '@material-ui/core';
 import { Send } from '@material-ui/icons';
 //Store
 import { store } from '../store.js';
@@ -33,6 +39,14 @@ const useStyles = makeStyles((theme) => ({
   },
   buttonSend: {
     marginLeft: 20,
+  },
+  buttonProgress: {
+    color: red[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
   },
 }));
 
@@ -106,6 +120,8 @@ export default function CommandsTextBox(props) {
   const [autoComplete, setAutoComplete] = useState({
     name: '',
   });
+  const [loading, setLoading] = useState(true);
+
   const refWS = useRef(null);
   const classes = useStyles();
   const globalState = useContext(store);
@@ -181,6 +197,10 @@ export default function CommandsTextBox(props) {
             >
               Send
             </ColorButton>
+            <CircularProgress size={24} className={classes.buttonProgress} />
+            {loading && (
+              <CircularProgress size={24} className={classes.buttonProgress} />
+            )}
           </Grid>
         </Grid>
       </div>

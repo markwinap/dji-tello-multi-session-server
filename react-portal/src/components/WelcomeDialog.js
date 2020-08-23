@@ -94,7 +94,7 @@ export default function WelcomeDialog(props) {
   }, []);
 
   const connectWS = () => {
-    console.log('Connect WS');
+    console.log('Connecting To WS');
     setConnectBtn(true);
     setWS(state?.server);
     getWS().addEventListener('open', (e) => {

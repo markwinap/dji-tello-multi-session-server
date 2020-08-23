@@ -11,6 +11,7 @@ import {
   ListItemText,
   Avatar,
   Divider,
+  Paper,
 } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -37,25 +38,27 @@ export default function CommandsQueue(props) {
       <Typography className={classes.title} variant={titleSize} gutterBottom>
         {title}
       </Typography>
-      <ScrollToBottom className={classes.newRoot}>
-        <List className={classes.gridList}>
-          {messages.map((e, i) => (
-            <>
-              <ListItem
-                key={`l_item_${i}`}
-                selected={e.process}
-                alignItems={e.id == 'flex-start'}
-              >
-                <ListItemAvatar>
-                  <Avatar>{e.emoji ? e.emoji : '😀'}</Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={e.name} secondary={e.msg} />
-              </ListItem>
-              <Divider />
-            </>
-          ))}
-        </List>
-      </ScrollToBottom>
+      <Paper>
+        <ScrollToBottom className={classes.newRoot}>
+          <List className={classes.gridList}>
+            {messages.map((e, i) => (
+              <>
+                <ListItem
+                  key={`l_item_${i}`}
+                  selected={e.process}
+                  alignItems={e.id == 'flex-start'}
+                >
+                  <ListItemAvatar>
+                    <Avatar>{e.emoji ? e.emoji : '😀'}</Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={e.name} secondary={e.msg} />
+                </ListItem>
+                <Divider />
+              </>
+            ))}
+          </List>
+        </ScrollToBottom>
+      </Paper>
     </React.Fragment>
   );
 }

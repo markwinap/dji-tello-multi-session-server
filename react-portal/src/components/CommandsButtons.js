@@ -93,7 +93,7 @@ export default function CommandsButtons(props) {
                   className={classes.buttonMargin}
                 >
                   <Button onClick={() => send('up 100')}>Up 100</Button>
-                  <Button onClick={() => send('cc 90')}>Rotate CW 90°</Button>
+                  <Button onClick={() => send('cw 90')}>Rotate CW 90°</Button>
                 </ButtonGroup>
                 <ButtonGroup
                   fullWidth

@@ -3,7 +3,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import { Box, Typography, Icon } from '@material-ui/core';
+import { Box, Typography, Icon, LinearProgress } from '@material-ui/core';
 import { AccessAlarm, ThreeDRotation } from '@material-ui/icons';
 import { red } from '@material-ui/core/colors';
 
@@ -79,6 +79,7 @@ export default function SimpleContainer() {
                 />
               </Grid>
               <Grid item>
+                <LinearProgress variant="determinate" value={50} />
                 <CommandsTextBox
                   messages={state.messageQueue}
                   title="Messages"
