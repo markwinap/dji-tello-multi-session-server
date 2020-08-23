@@ -15,6 +15,7 @@ import { Send } from '@material-ui/icons';
 import { store } from '../store.js';
 //Hooks
 import useWS from '../hooks/WS';
+import useTimer from '../hooks/Timer';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,22 +62,22 @@ const commandList = [
     name: 'emergency',
   },
   {
-    name: 'up ',
+    name: 'up 50',
   },
   {
-    name: 'down ',
+    name: 'down 50',
   },
   {
-    name: 'left ',
+    name: 'left 50',
   },
   {
-    name: 'right ',
+    name: 'right 50',
   },
   {
-    name: 'forward ',
+    name: 'forward 50',
   },
   {
-    name: 'back ',
+    name: 'back 50',
   },
   {
     name: 'flip l',
@@ -91,7 +92,7 @@ const commandList = [
     name: 'flip b',
   },
   {
-    name: 'cw ',
+    name: 'cw 45',
   },
   {
     name: 'go ',
@@ -127,14 +128,7 @@ export default function CommandsTextBox(props) {
   const globalState = useContext(store);
   const { dispatch, state } = globalState;
   const [getWS, setWS, sendWS] = useWS();
-
-  useEffect(() => {
-    console.log('&&&&&&&&&&&&&&');
-    console.log(refWS);
-    return () => {
-      //subscription.unsubscribe();
-    };
-  }, [refWS]);
+  const [setTimer] = useTimer();
 
   return (
     <React.Fragment>
@@ -180,27 +174,27 @@ export default function CommandsTextBox(props) {
               fullWidth
               variant="contained"
               color="primary"
+              disabled={!(state?.progress === 100)}
               onClick={() => {
-                setWS();
-                sendWS({
-                  name: state?.name,
-                  emoji: state?.emoji?.native,
-                  msg: textBox,
-                });
-                setTextBox('');
-                setAutoComplete({
-                  name: '',
-                });
+                if (textBox !== '') {
+                  setTimer(process.env.REACT_APP_TEXT_TIMEOUT);
+                  setWS();
+                  sendWS({
+                    name: state?.name,
+                    emoji: state?.emoji?.native,
+                    msg: textBox,
+                  });
+                  setTextBox('');
+                  setAutoComplete({
+                    name: '',
+                  });
+                }
               }}
               //className={classes.buttonSend}
               endIcon={<Send />}
             >
               Send
             </ColorButton>
-            <CircularProgress size={24} className={classes.buttonProgress} />
-            {loading && (
-              <CircularProgress size={24} className={classes.buttonProgress} />
-            )}
           </Grid>
         </Grid>
       </div>

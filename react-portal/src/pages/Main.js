@@ -71,29 +71,25 @@ export default function SimpleContainer() {
                 />
               </Grid>
               <Grid item>
-                <CommandsQueue
-                  messages={state.messageQueue}
-                  title="Messages"
-                  titleSize="h5"
-                  userId={0}
-                />
+                <Paper>
+                  <CommandsQueue
+                    messages={state.messageQueue}
+                    title="Messages"
+                    titleSize="h5"
+                    userId={0}
+                  />
+                </Paper>
               </Grid>
               <Grid item>
-                <LinearProgress variant="determinate" value={50} />
-                <CommandsTextBox
-                  messages={state.messageQueue}
-                  title="Messages"
-                  titleSize="h5"
-                  userId={0}
+                <LinearProgress
+                  color="secondary"
+                  variant="determinate"
+                  value={state?.progress}
                 />
+                <CommandsTextBox />
               </Grid>
               <Grid item>
-                <CommandsButtons
-                  messages={state.messageQueue}
-                  title="Messages"
-                  titleSize="h5"
-                  userId={0}
-                />
+                <CommandsButtons />
               </Grid>
             </Grid>
           </Grid>

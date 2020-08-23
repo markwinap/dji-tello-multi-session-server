@@ -2,23 +2,7 @@
 import React, { createContext, useReducer } from 'react';
 
 const initialState = {
-  page: 'main',
-  data: [],
-  patientNotes: [],
-  familyMembers: [],
-  patient: {},
-  family: {},
-  selectedPatient: {},
-  selectedPatientNote: {},
-  filters: [
-    {
-      field: 1,
-      condition: 1,
-      value: '',
-      and: false,
-      or: false,
-    },
-  ],
+  progress: 100,
   ws: null,
   welcomeDialog: true,
   name: `Player`,
@@ -39,6 +23,8 @@ const { Provider } = store;
 const StateProvider = ({ children }) => {
   const [state, dispatch] = useReducer((state, action) => {
     switch (action.type) {
+      case 'set-progress':
+        return { ...state, ...{ progress: action.value } };
       case 'set-ws':
         return { ...state, ...{ ws: action.value } };
       case 'set-status':

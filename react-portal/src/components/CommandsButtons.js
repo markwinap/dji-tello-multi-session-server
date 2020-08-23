@@ -7,6 +7,7 @@ import { ErrorOutline } from '@material-ui/icons';
 import { store } from '../store.js';
 //Hooks
 import useWS from '../hooks/WS';
+import useTimer from '../hooks/Timer';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,8 +44,10 @@ export default function CommandsButtons(props) {
   const globalState = useContext(store);
   const { dispatch, state } = globalState;
   const [getWS, setWS, sendWS] = useWS();
+  const [setTimer] = useTimer();
 
   const send = (cmd) => {
+    setTimer(process.env.REACT_APP_TEXT_TIMEOUT);
     setWS();
     sendWS({
       name: state?.name,
@@ -80,8 +83,18 @@ export default function CommandsButtons(props) {
                   color="default"
                   variant="contained"
                 >
-                  <Button onClick={() => send('takeoff')}>Takeoff</Button>
-                  <Button onClick={() => send('land')}>Land</Button>
+                  <Button
+                    disabled={!(state?.progress === 100)}
+                    onClick={() => send('takeoff')}
+                  >
+                    Takeoff
+                  </Button>
+                  <Button
+                    disabled={!(state?.progress === 100)}
+                    onClick={() => send('land')}
+                  >
+                    Land
+                  </Button>
                 </ButtonGroup>
               </Grid>
               <Grid item xs={6}>
@@ -92,8 +105,18 @@ export default function CommandsButtons(props) {
                   variant="contained"
                   className={classes.buttonMargin}
                 >
-                  <Button onClick={() => send('up 100')}>Up 100</Button>
-                  <Button onClick={() => send('cw 90')}>Rotate CW 90°</Button>
+                  <Button
+                    disabled={!(state?.progress === 100)}
+                    onClick={() => send('up 100')}
+                  >
+                    Up 100
+                  </Button>
+                  <Button
+                    disabled={!(state?.progress === 100)}
+                    onClick={() => send('cw 90')}
+                  >
+                    Rotate CW 90°
+                  </Button>
                 </ButtonGroup>
                 <ButtonGroup
                   fullWidth
@@ -101,8 +124,18 @@ export default function CommandsButtons(props) {
                   color="default"
                   variant="contained"
                 >
-                  <Button onClick={() => send('down 100')}>Down 100</Button>
-                  <Button onClick={() => send('ccw 90')}>Rotate CCW 90</Button>
+                  <Button
+                    disabled={!(state?.progress === 100)}
+                    onClick={() => send('down 100')}
+                  >
+                    Down 100
+                  </Button>
+                  <Button
+                    disabled={!(state?.progress === 100)}
+                    onClick={() => send('ccw 90')}
+                  >
+                    Rotate CCW 90
+                  </Button>
                 </ButtonGroup>
               </Grid>
             </Grid>
@@ -114,10 +147,30 @@ export default function CommandsButtons(props) {
               color="primary"
               variant="contained"
             >
-              <Button onClick={() => send('forward 100')}>Fwd 100</Button>
-              <Button onClick={() => send('back 100')}>Bwd 100</Button>
-              <Button onClick={() => send('left 100')}>Left 100</Button>
-              <Button onClick={() => send('right 100')}>Rigth 100</Button>
+              <Button
+                disabled={!(state?.progress === 100)}
+                onClick={() => send('forward 100')}
+              >
+                Fwd 100
+              </Button>
+              <Button
+                disabled={!(state?.progress === 100)}
+                onClick={() => send('back 100')}
+              >
+                Bwd 100
+              </Button>
+              <Button
+                disabled={!(state?.progress === 100)}
+                onClick={() => send('left 100')}
+              >
+                Left 100
+              </Button>
+              <Button
+                disabled={!(state?.progress === 100)}
+                onClick={() => send('right 100')}
+              >
+                Rigth 100
+              </Button>
             </ButtonGroup>
           </Grid>
           <Grid item>
@@ -126,6 +179,7 @@ export default function CommandsButtons(props) {
               fullWidth
               color="secondary"
               onClick={() => send('emergency')}
+              disabled={!(state?.progress === 100)}
               startIcon={<ErrorOutline />}
             >
               Emergency Stop

@@ -56,10 +56,17 @@ export default function WelcomeDialog(props) {
   const { title, description, status, titleSize, messages, userId } = props;
   const classes = useStyles();
   const [name, setName] = useLocalStorage('player_name', 'Player');
-
   const [server, setServer] = useLocalStorage(
     'server_address',
     'ws://192.168.1.211:8080'
+  );
+  const [emoji, setEmoji] = useLocalStorage(
+    'emoji',
+    JSON.stringify({
+      id: 'sunglasses',
+      name: 'Smiling Face with Sunglasses',
+      native: '😎',
+    })
   );
   const globalState = useContext(store);
   const { dispatch, state } = globalState;
@@ -69,6 +76,7 @@ export default function WelcomeDialog(props) {
   const [getWS, setWS, sendWS] = useWS();
 
   useEffect(() => {
+    const e = JSON.parse(emoji);
     if (name == 'Player') {
       const _name = `Player ${getRandomInt(111, 999)}`;
       setName(_name);
@@ -82,10 +90,16 @@ export default function WelcomeDialog(props) {
         value: name,
       });
     }
-    if (server != 'https://') {
+    if (server !== 'https://') {
       dispatch({
         type: 'set-server',
         value: server,
+      });
+    }
+    if (e.id !== 'sunglasses') {
+      dispatch({
+        type: 'set-emoji',
+        value: e,
       });
     }
     return () => {
@@ -171,6 +185,7 @@ export default function WelcomeDialog(props) {
               type: 'set-emoji',
               value: e,
             });
+            setEmoji(JSON.stringify(e));
             setOpenEmoji(false);
           }}
         />

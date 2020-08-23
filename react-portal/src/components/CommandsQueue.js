@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
   newRoot: {
     height: 350,
-    backgroundColor: '#e7e7e7',
+    //backgroundColor: '#e7e7e7',
     width: '100%',
   },
 }));
@@ -38,27 +38,25 @@ export default function CommandsQueue(props) {
       <Typography className={classes.title} variant={titleSize} gutterBottom>
         {title}
       </Typography>
-      <Paper>
-        <ScrollToBottom className={classes.newRoot}>
-          <List className={classes.gridList}>
-            {messages.map((e, i) => (
-              <>
-                <ListItem
-                  key={`l_item_${i}`}
-                  selected={e.process}
-                  alignItems={e.id == 'flex-start'}
-                >
-                  <ListItemAvatar>
-                    <Avatar>{e.emoji ? e.emoji : '😀'}</Avatar>
-                  </ListItemAvatar>
-                  <ListItemText primary={e.name} secondary={e.msg} />
-                </ListItem>
-                <Divider />
-              </>
-            ))}
-          </List>
-        </ScrollToBottom>
-      </Paper>
+      <ScrollToBottom className={classes.newRoot}>
+        <List className={classes.gridList}>
+          {messages.map((e, i) => (
+            <>
+              <ListItem
+                key={`l_item_${i}`}
+                selected={e.process}
+                alignItems={e.id == 'flex-start'}
+              >
+                <ListItemAvatar>
+                  <Avatar>{e.emoji ? e.emoji : '😀'}</Avatar>
+                </ListItemAvatar>
+                <ListItemText primary={e.name} secondary={e.msg} />
+              </ListItem>
+              <Divider />
+            </>
+          ))}
+        </List>
+      </ScrollToBottom>
     </React.Fragment>
   );
 }
