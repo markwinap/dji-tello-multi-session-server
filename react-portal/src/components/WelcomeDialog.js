@@ -23,6 +23,7 @@ import { Send } from '@material-ui/icons';
 import { store } from '../store.js';
 //Hooks
 import useWS from '../hooks/WS';
+import useVideo from '../hooks/Video';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,6 +75,7 @@ export default function WelcomeDialog(props) {
   const [connectBtn, setConnectBtn] = useState(false);
 
   const [getWS, setWS, sendWS] = useWS();
+  const [setVideo, sendFrame] = useVideo();
 
   useEffect(() => {
     const e = JSON.parse(emoji);
@@ -110,6 +112,7 @@ export default function WelcomeDialog(props) {
   const connectWS = () => {
     console.log('Connecting To WS');
     setConnectBtn(true);
+    setVideo();
     setWS(state?.server);
     getWS().addEventListener('open', (e) => {
       console.log('OPEN');
@@ -128,21 +131,23 @@ export default function WelcomeDialog(props) {
       //setSnackbarMsg('Socket Connected');
     });
     getWS().addEventListener('message', (e) => {
-      const _data = JSON.parse(e.data);
-      console.log(_data);
-      if (_data.name === 'bat') {
-        dispatch({
-          type: 'set-battery',
-          value: _data.msg,
-        });
+      if (e.data instanceof Blob) {
+        sendFrame(e.data);
       } else {
-        dispatch({
-          type: 'set-messageQueue',
-          value: _data,
-        });
+        const _data = JSON.parse(e.data);
+        if (_data.name === 'bat') {
+          dispatch({
+            type: 'set-battery',
+            value: _data.msg,
+          });
+        } else {
+          dispatch({
+            type: 'set-messageQueue',
+            value: _data,
+          });
+        }
       }
     });
-
     getWS().addEventListener('error', (e) => {
       console.log('Socket Error');
       dispatch({

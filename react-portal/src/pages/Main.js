@@ -39,6 +39,10 @@ const useStyles = makeStyles((theme) => ({
   container: {
     height: '100%',
   },
+  video: {
+    width: '100%',
+    height: '100%',
+  },
 }));
 
 export default function SimpleContainer() {
@@ -55,7 +59,15 @@ export default function SimpleContainer() {
       />
       <Box className={classes.box} height="100%" width="100%">
         <Grid className={classes.container} container spacing={2}>
-          <Grid item xs={8}></Grid>
+          <Grid item xs={8}>
+            <video
+              className={classes.video}
+              controls
+              autoPlay
+              id="player"
+              //ref={refVideo}
+            ></video>
+          </Grid>
           <Grid className={classes.col} item xs={4}>
             <Grid
               className={classes.container}

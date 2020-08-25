@@ -6339,6 +6339,11 @@ jest@24.9.0:
     import-local "^2.0.0"
     jest-cli "^24.9.0"
 
+jmuxer@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/jmuxer/-/jmuxer-1.2.0.tgz#38e1880e8c9b4812cffaeb37edd879c626a9f94a"
+  integrity sha512-ekJ/3D/poGdkNtwcpe4hXMOFTJuki9dkT19dmZec5eXB3nlAk1+DEtOjigwthx1d5+SA87llPKzxGiqBip2qrw==
+
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"

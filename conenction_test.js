@@ -14,13 +14,17 @@ const dgram = require('dgram');
 
 let mainSocket = dgram.createSocket('udp4'); // UDP SERVER IPv4 FOR SENDING COMMANDS AND RECEIVING COMMAND CONFIRMATION
 let statusSocket = dgram.createSocket('udp4'); // UDP SERVER IPv4 FOR RECEIVING STATUS
-const videoSocket = dgram.createSocket('udp4'); // UDP SERVER IPv4 FOR RECEIVING VIDEO RAW H264 ENCODED YUV420p
+let videoSocket = dgram.createSocket('udp4'); // UDP SERVER IPv4 FOR RECEIVING VIDEO RAW H264 ENCODED YUV420p
 // WS
 const WebSocket = require('ws'); // WEBSOCKET
 
-let wifiStatus = false; //
-let udpStatus = false;
+let videoBuff = []; // VIDEO BUFFER
+let frame = [];
+let counter = 0; // COUNTER FOR VIDEO BUFFER FRAMES
+let wifiStatus = false; // WIFI CONNECTED
+let udpStatus = false; // UPD SERVER CONNECTED
 let bat = -1;
+const time = 0;
 
 // ###WEBSOCKET### SERVER GAMEPAD & VIDEO
 const websocket = new WebSocket.Server({
@@ -156,6 +160,45 @@ function bindStatusEvents(socket) {
   });
 }
 
+function bindVideoEvents(socket) {
+  // UDP CLIENT SERVER
+  socket.on('error', (err) => {
+    console.log(`STATUS ERROR :\n${err.stack}`);
+    udpStatus = false;
+    statusSocket.close();
+  });
+  socket.on('listening', () => {
+    const address = statusSocket.address();
+    // UNCOMNET FOR DEBUG
+    console.log(`UDP STATUS SERVER - ${address.address}:${address.port}`);
+  });
+  socket.on('message', (message, remote) => {
+    const buf = Buffer.from(message);
+
+    if (buf.indexOf(Buffer.from([0, 0, 0, 1, 65])) !== -1) {
+      // FIND IF FIRST PART OF FRAME
+      counter += 1;
+      videoBuff.push(frame);
+      if (counter === 3) {
+        // COLLECT 3 FRAMES AND SEND TO WEBSOCKET
+        // sendWS(JSON.stringify({ video: Buffer.concat(videoBuff) }));
+        // sendWS( Buffer.concat(videoBuff));
+
+        // console.log(videoBuff.length)
+        sendWS(Buffer.concat(frame));
+        counter = 0;
+        videoBuff.length = 0;
+        videoBuff = [];
+        frame.length = 0;
+        frame = [];
+      }
+      frame.push(buf);
+    } else {
+      frame.push(buf);
+    }
+  });
+}
+
 function exectCommand() {
   return new Promise((resolve, reject) => {
     exec('iwgetid -r', (error, stdout, stderr) => {
@@ -190,8 +233,12 @@ const connectUDPServers = async () => {
   statusSocket = dgram.createSocket('udp4');
   bindStatusEvents(statusSocket);
   statusSocket.bind(process.env.TELLO_PORT_STATUS);
+  videoSocket = dgram.createSocket('udp4');
+  bindVideoEvents(videoSocket);
+  videoSocket.bind(process.env.TELLO_PORT_VIDEO);
   // cmdBuff.push('command')
   sendCMD('command');
+  sendCMD('streamon');
   sendWS(
     JSON.stringify({
       name: 'Tello',
