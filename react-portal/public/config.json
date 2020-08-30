@@ -1,7 +1,7 @@
 {
     "servers": [
-        {"name": "ServerA", "address": "wss://3.tcp.ngrok.io:23479"},
-        {"name": "ServerB", "address": "wss://3.tcp.ngrok.io:23502"}
+        {"name": "ServerA", "address": "ws://3.tcp.ngrok.io:23479"},
+        {"name": "ServerB", "address": "ws://3.tcp.ngrok.io:23502"}
     ],
     "strings":{
         "welcomeTitle": "Welcome to Tello drone test app! V1.1",
