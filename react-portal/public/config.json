@@ -1,7 +1,7 @@
 {
     "servers": [
         {"name": "ServerA", "address": "192.168.1.211:8080"},
-        {"name": "ServerB", "address": "192.168.1.212:8080"},
+        {"name": "ServerB", "address": "f542386e23b7.ngrok.io"},
         {"name": "ServerC", "address": "192.168.1.213:8080"}
     ],
     "strings":{
