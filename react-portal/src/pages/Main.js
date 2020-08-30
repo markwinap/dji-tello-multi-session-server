@@ -51,6 +51,13 @@ export default function SimpleContainer() {
   const { dispatch, state } = globalState;
 
   useEffect(() => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const password = urlParams.get('password');
+    dispatch({
+      type: 'set-password',
+      value: password,
+    });
     fetch('./config.json')
       .then((response) => response.json())
       .then((data) => {

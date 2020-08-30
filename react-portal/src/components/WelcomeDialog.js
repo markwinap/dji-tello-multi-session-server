@@ -117,7 +117,11 @@ export default function WelcomeDialog(props) {
     console.log(state?.servers[state?.server].address);
     setConnectBtn(true);
     setVideo();
-    setWS(state?.servers[state?.server].address);
+    setWS(
+      `ws://${state?.servers[state?.server].address}?password=${
+        state?.password
+      }`
+    );
     getWS().addEventListener('open', (e) => {
       console.log('OPEN');
       sendWS({

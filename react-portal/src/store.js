@@ -6,6 +6,7 @@ const initialState = {
   ws: null,
   welcomeDialog: true,
   strings: {},
+  password: '',
   name: `Player`,
   server: 0,
   servers: [],
@@ -25,6 +26,8 @@ const { Provider } = store;
 const StateProvider = ({ children }) => {
   const [state, dispatch] = useReducer((state, action) => {
     switch (action.type) {
+      case 'set-password':
+        return { ...state, ...{ password: action.value } };
       case 'set-strings':
         return { ...state, ...{ strings: action.value } };
       case 'set-servers':

@@ -15,7 +15,8 @@
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
     "react-scroll-to-bottom": "^3.0.0",
-    "react-use-localstorage": "^3.4.3"
+    "react-use-localstorage": "^3.4.3",
+    "ws": "^7.3.1"
   },
   "scripts": {
     "start": "react-scripts start",

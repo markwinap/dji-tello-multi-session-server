@@ -14,12 +14,7 @@ function useWS() {
     if (state?.ws) {
       refWS.current = state?.ws;
     } else {
-      refWS.current = new WebSocket(value, {
-        perMessageDeflate: false,
-        headers: {
-          Authorization: `Basic bWFyY286bWFydGluZXo=`,
-        },
-      });
+      refWS.current = new WebSocket(value);
       dispatch({
         type: 'set-ws',
         value: refWS.current,

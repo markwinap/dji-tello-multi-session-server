@@ -1,8 +1,8 @@
 {
     "servers": [
-        {"name": "ServerA", "address": "ws://192.168.1.211:8080"},
-        {"name": "ServerB", "address": "ws://192.168.1.212:8080"},
-        {"name": "ServerC", "address": "ws://192.168.1.213:8080"}
+        {"name": "ServerA", "address": "192.168.1.211:8080"},
+        {"name": "ServerB", "address": "192.168.1.212:8080"},
+        {"name": "ServerC", "address": "192.168.1.213:8080"}
     ],
     "strings":{
         "welcomeTitle": "Welcome to Tello drone test app!",

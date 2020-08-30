@@ -8,6 +8,7 @@ Marco Martinez - markwinap@gmail.com
 
 // Env variables
 require('dotenv').config();
+const querystring = require('querystring');
 const { exec } = require('child_process');
 // UPP
 const dgram = require('dgram');
@@ -90,12 +91,22 @@ function dataSplit(str) {
   return data;
 }
 
-websocket.on('connection', (ws) => {
-  console.log('Socket connected. sending data...');
-  console.log(ws);
-  ws.on('error', (err) => {
+websocket.on('connection', (ws, req) => {
+  const headers = req.headers;
+  console.log(`Socket connected ${headers.origin}`);
+  if (req.url) {
+    const url = querystring.parse(req.url);
+    const password = url['/?password'];
+    if (password !== process.env.PASSWORD) {
+      ws.terminate();
+      console.log('Invalid Credentials');
+    }
+  } else {
+    ws.terminate();
+    console.log('Missing URL');
+  }
+  ws.on('error', (error) => {
     console.log('WebSocket error');
-    console.log(err);
   });
   ws.on('message', (msg) => {
     const obj = JSON.parse(msg);
@@ -106,7 +117,7 @@ websocket.on('connection', (ws) => {
       sendWS(JSON.stringify(obj));
     }
   });
-  ws.on('close', () => {
+  ws.on('close', (msg) => {
     console.log('WebSocket close');
   });
 });
