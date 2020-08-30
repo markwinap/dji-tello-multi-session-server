@@ -53,6 +53,9 @@ const websocket = new WebSocket.Server({
 
 function sendWS(data) {
   websocket.clients.forEach((client) => {
+    if (client.isAlive === false) {
+      client.terminate();
+    }
     if (client.readyState === 1 && client.bufferedAmount === 0) {
       try {
         client.send(data); // SEND OVER WEBSOCKET
@@ -87,12 +90,14 @@ function dataSplit(str) {
   return data;
 }
 
-websocket.on('connection', (websocket) => {
+websocket.on('connection', (ws) => {
   console.log('Socket connected. sending data...');
-  websocket.on('error', (error) => {
+  console.log(ws);
+  ws.on('error', (err) => {
     console.log('WebSocket error');
+    console.log(err);
   });
-  websocket.on('message', (msg) => {
+  ws.on('message', (msg) => {
     const obj = JSON.parse(msg);
     if (obj.msg.startsWith('#')) {
       sendWS(JSON.stringify(obj));
