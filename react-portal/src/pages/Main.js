@@ -50,12 +50,40 @@ export default function SimpleContainer() {
   const globalState = useContext(store);
   const { dispatch, state } = globalState;
 
+  useEffect(() => {
+    fetch('./config.json')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('loaded config file');
+        dispatch({
+          type: 'set-servers',
+          value: data.servers,
+        });
+        dispatch({
+          type: 'set-strings',
+          value: data.strings,
+        });
+      });
+
+    return () => {
+      //subscription.unsubscribe();
+    };
+  }, [dispatch]);
+
   return (
     <React.Fragment>
       <CssBaseline />
       <WelcomeDialog
-        title="Welcome to Tello drone test app!"
-        description="Change your name, emoji, and set the correct server!"
+        title={`${
+          state?.strings?.welcomeTitle
+            ? state?.strings?.welcomeTitle
+            : 'Welcome to Tello drone test app!'
+        }`}
+        description={`${
+          state?.strings?.welcomeTitle
+            ? state?.strings?.welcomeDescription
+            : 'Change your name, emoji, and set the correct server!'
+        }`}
       />
       <Box className={classes.box} height="100%" width="100%">
         <Grid className={classes.container} container spacing={2}>

@@ -5,8 +5,10 @@ const initialState = {
   progress: 100,
   ws: null,
   welcomeDialog: true,
+  strings: {},
   name: `Player`,
-  server: 'https://',
+  server: 0,
+  servers: [],
   emoji: {
     id: 'sunglasses',
     name: 'Smiling Face with Sunglasses',
@@ -23,6 +25,10 @@ const { Provider } = store;
 const StateProvider = ({ children }) => {
   const [state, dispatch] = useReducer((state, action) => {
     switch (action.type) {
+      case 'set-strings':
+        return { ...state, ...{ strings: action.value } };
+      case 'set-servers':
+        return { ...state, ...{ servers: action.value } };
       case 'set-progress':
         return { ...state, ...{ progress: action.value } };
       case 'set-ws':

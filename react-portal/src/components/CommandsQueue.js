@@ -11,7 +11,6 @@ import {
   ListItemText,
   Avatar,
   Divider,
-  Paper,
 } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -29,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CommandsQueue(props) {
-  const { title, status, titleSize, messages, userId } = props;
+  const { title, titleSize, messages } = props;
   const classes = useStyles();
 
   return (
@@ -45,7 +44,7 @@ export default function CommandsQueue(props) {
               <ListItem
                 key={`l_item_${i}`}
                 selected={e.process}
-                alignItems={e.id == 'flex-start'}
+                alignItems={e.id === 'flex-start'}
               >
                 <ListItemAvatar>
                   <Avatar>{e.emoji ? e.emoji : '😀'}</Avatar>

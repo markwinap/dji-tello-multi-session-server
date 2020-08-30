@@ -1,15 +1,9 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useContext, useState, useRef } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { green, red } from '@material-ui/core/colors';
-import {
-  TextField,
-  Paper,
-  Grid,
-  Button,
-  CircularProgress,
-} from '@material-ui/core';
+import { TextField, Paper, Grid, Button } from '@material-ui/core';
 import { Send } from '@material-ui/icons';
 //Store
 import { store } from '../store.js';
@@ -116,13 +110,10 @@ const ColorButton = withStyles((theme) => ({
 }))(Button);
 
 export default function CommandsTextBox(props) {
-  const { title, status, titleSize, messages, userId } = props;
   const [textBox, setTextBox] = useState('');
   const [autoComplete, setAutoComplete] = useState({
     name: '',
   });
-  const [loading, setLoading] = useState(true);
-
   const refWS = useRef(null);
   const classes = useStyles();
   const globalState = useContext(store);

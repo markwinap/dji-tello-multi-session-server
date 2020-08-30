@@ -1,4 +1,5 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useContext, useState, useEffect } from 'react';
 import 'emoji-mart/css/emoji-mart.css';
 import { Picker } from 'emoji-mart';
 import useLocalStorage from 'react-use-localstorage';
@@ -7,8 +8,10 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
 import {
   TextField,
-  Paper,
-  Grid,
+  InputLabel,
+  FormControl,
+  MenuItem,
+  Select,
   Button,
   Dialog,
   DialogActions,
@@ -17,7 +20,6 @@ import {
   DialogTitle,
   IconButton,
 } from '@material-ui/core';
-import { Send } from '@material-ui/icons';
 
 //Store
 import { store } from '../store.js';
@@ -31,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     width: 500,
+  },
+  formControl: {
+    minWidth: 120,
   },
 }));
 
@@ -54,13 +59,10 @@ function getRandomInt(min, max) {
 }
 
 export default function WelcomeDialog(props) {
-  const { title, description, status, titleSize, messages, userId } = props;
+  const { title, description } = props;
   const classes = useStyles();
   const [name, setName] = useLocalStorage('player_name', 'Player');
-  const [server, setServer] = useLocalStorage(
-    'server_address',
-    'ws://192.168.1.211:8080'
-  );
+  const [server, setServer] = useLocalStorage('server_address', 0);
   const [emoji, setEmoji] = useLocalStorage(
     'emoji',
     JSON.stringify({
@@ -78,8 +80,9 @@ export default function WelcomeDialog(props) {
   const [setVideo, sendFrame] = useVideo();
 
   useEffect(() => {
+    console.log('WELCOME BOX');
     const e = JSON.parse(emoji);
-    if (name == 'Player') {
+    if (name === 'Player') {
       const _name = `Player ${getRandomInt(111, 999)}`;
       setName(_name);
       dispatch({
@@ -92,7 +95,7 @@ export default function WelcomeDialog(props) {
         value: name,
       });
     }
-    if (server !== 'https://') {
+    if (server !== '0') {
       dispatch({
         type: 'set-server',
         value: server,
@@ -111,9 +114,10 @@ export default function WelcomeDialog(props) {
 
   const connectWS = () => {
     console.log('Connecting To WS');
+    console.log(state?.servers[state?.server].address);
     setConnectBtn(true);
     setVideo();
-    setWS(state?.server);
+    setWS(state?.servers[state?.server].address);
     getWS().addEventListener('open', (e) => {
       console.log('OPEN');
       sendWS({
@@ -225,20 +229,30 @@ export default function WelcomeDialog(props) {
               });
             }}
           />
-          <TextField
-            id="standard-basic"
-            label="Server"
-            value={state?.server}
-            onChange={(e) => {
-              const _server = e.currentTarget.value;
-              console.log(_server);
-              setServer(_server);
-              dispatch({
-                type: 'set-server',
-                value: _server,
-              });
-            }}
-          />
+          <FormControl className={classes.formControl}>
+            <InputLabel>Server</InputLabel>
+            <Select
+              labelId="server"
+              id="server"
+              autoWidth
+              value={state?.server}
+              onChange={(e) => {
+                const _server = e.target.value;
+                console.log(_server);
+                dispatch({
+                  type: 'set-server',
+                  value: _server,
+                });
+                setServer(_server);
+              }}
+            >
+              {state?.servers.map((e, i) => (
+                <MenuItem key={i} value={i}>
+                  {e.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </DialogContent>
         <DialogActions>
           <Button

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useContext } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Button, ButtonGroup } from '@material-ui/core';
@@ -39,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CommandsButtons(props) {
-  const { title, status, titleSize, messages, userId } = props;
   const classes = useStyles();
   const globalState = useContext(store);
   const { dispatch, state } = globalState;
