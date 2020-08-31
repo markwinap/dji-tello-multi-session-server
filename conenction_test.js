@@ -181,7 +181,7 @@ function bindVideoEvents(socket) {
   socket.on('error', (err) => {
     console.log(`STATUS ERROR :\n${err.stack}`);
     udpStatus = false;
-    statusSocket.close();
+    videoSocket.close();
   });
   socket.on('listening', () => {
     const address = statusSocket.address();
@@ -268,6 +268,7 @@ const disconnectUDPServers = () => {
   udpStatus = false;
   mainSocket.close();
   statusSocket.close();
+  videoSocket.close();
 };
 const checkUDP = async () => {
   if (wifiStatus && !udpStatus) {
