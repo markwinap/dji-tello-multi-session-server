@@ -10,8 +10,8 @@ function useWS() {
   const getWS = () => {
     return refWS.current;
   };
-  const setWS = (value) => {
-    if (state?.ws) {
+  const setWS = (value, state) => {
+    if (state?.ws && !state) {
       refWS.current = state?.ws;
     } else {
       refWS.current = new WebSocket(value);

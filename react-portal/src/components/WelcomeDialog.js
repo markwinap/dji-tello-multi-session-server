@@ -118,7 +118,8 @@ export default function WelcomeDialog(props) {
     setConnectBtn(true);
     setVideo();
     setWS(
-      `${state?.servers[state?.server].address}?password=${state?.password}`
+      `${state?.servers[state?.server].address}?password=${state?.password}`,
+      true
     );
     getWS().addEventListener('open', (e) => {
       console.log('OPEN');
