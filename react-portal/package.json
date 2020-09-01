@@ -13,7 +13,7 @@
     "jmuxer": "^1.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3",
+    "react-scripts": "3.2.0",
     "react-scroll-to-bottom": "^3.0.0",
     "react-use-localstorage": "^3.4.3",
     "ws": "^7.3.1"
@@ -22,7 +22,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "serve -s build"
   },
   "eslintConfig": {
     "extends": "react-app"
