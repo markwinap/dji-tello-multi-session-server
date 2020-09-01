@@ -3,7 +3,13 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import { Box, Typography, Icon, LinearProgress } from '@material-ui/core';
+import {
+  Box,
+  Typography,
+  Icon,
+  LinearProgress,
+  Container,
+} from '@material-ui/core';
 import { AccessAlarm, ThreeDRotation } from '@material-ui/icons';
 import { red } from '@material-ui/core/colors';
 
@@ -31,12 +37,15 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#272c34;',
   },
   box: {
-    paddingTop: 5,
+    //paddingTop: 5,
     paddingLeft: 10,
-    paddingRight: 10,
-    paddingBottom: 5,
+    //paddingRight: 10,
+    //paddingBottom: 5,
+    //width: '100%',
+    //height: '100%',
   },
   container: {
+    width: '100%',
     height: '100%',
   },
   video: {
@@ -83,7 +92,7 @@ export default function SimpleContainer() {
   }, [dispatch]);
 
   return (
-    <React.Fragment>
+    <>
       <CssBaseline />
       <WelcomeDialog
         title={`${
@@ -97,9 +106,9 @@ export default function SimpleContainer() {
             : 'Change your name, emoji, and set the correct server!'
         }`}
       />
-      <Box className={classes.box} height="100%" width="100%">
+      <Container disableGutters maxWidth="false" className={classes.box}>
         <Grid className={classes.container} container spacing={2}>
-          <Grid item xs={8}>
+          <Grid item lg={8} md={8} xs={12}>
             <video
               className={classes.video}
               controls
@@ -108,7 +117,7 @@ export default function SimpleContainer() {
               //ref={refVideo}
             ></video>
           </Grid>
-          <Grid className={classes.col} item xs={4}>
+          <Grid className={classes.col} item lg={4} md={4} xs={12}>
             <Grid
               className={classes.container}
               direction="column"
@@ -123,11 +132,15 @@ export default function SimpleContainer() {
                 />
               </Grid>
               <Grid item>
-                <Paper>
+                <Paper
+                  style={{
+                    backgroundColor: '#bdbdbd',
+                  }}
+                >
                   <CommandsQueue
                     messages={state.messageQueue}
-                    title="Messages"
-                    titleSize="h5"
+                    //title="Messages"
+                    //titleSize="h5"
                     userId={0}
                   />
                 </Paper>
@@ -146,7 +159,7 @@ export default function SimpleContainer() {
             </Grid>
           </Grid>
         </Grid>
-      </Box>
-    </React.Fragment>
+      </Container>
+    </>
   );
 }

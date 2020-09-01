@@ -33,13 +33,14 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 10,
     paddingRight: 10,
     paddingBottom: 5,
+    fontSize: 'calc(14px + (26 - 14) * ((100vw - 300px) / (1600 - 300)))',
   },
   title: {
     color: 'white',
   },
   titleIcon: {
     color: 'white',
-    fontSize: 30,
+
     marginBottom: 5,
   },
 }));
@@ -79,7 +80,7 @@ export default function BattStatus(props) {
         alignItems="center"
         spacing={0}
       >
-        <Grid item xs={2}>
+        <Grid item lg={3} md={3} sm={2} xs={4}>
           <Typography
             className={classes.title}
             variant={titleSize}
@@ -88,7 +89,7 @@ export default function BattStatus(props) {
             {title}
           </Typography>
         </Grid>
-        <Grid item xs={1}>
+        <Grid item lg={1} md={3} sm={1} xs={1}>
           <Batterylevel level={level} />
         </Grid>
       </Grid>
