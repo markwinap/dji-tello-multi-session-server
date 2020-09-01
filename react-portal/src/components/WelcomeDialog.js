@@ -136,9 +136,6 @@ export default function WelcomeDialog(props) {
       //setSnackbarMsg('Socket Connected');
     });
     getWS().addEventListener('message', (e) => {
-      console.log('getWS message');
-      console.log('getWS message', e.data);
-      console.log('getWS message', e.data instanceof Blob);
       if (e.data instanceof Blob) {
         sendFrame(e.data);
       } else {

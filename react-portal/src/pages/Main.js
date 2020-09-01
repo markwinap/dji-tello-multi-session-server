@@ -70,7 +70,7 @@ export default function SimpleContainer() {
     });
     dispatch({
       type: 'set-server',
-      value: `ws://${server}`,
+      value: `wss://${server}`,
     });
     fetch('./config.json')
       .then((response) => response.json())
@@ -139,11 +139,14 @@ export default function SimpleContainer() {
                 />
               </Grid>
   */}
-                <CommandsTextBox />
               </Grid>
 
               <Grid item>
                 <CommandsButtons />
+              </Grid>
+
+              <Grid item>
+                <CommandsTextBox />
               </Grid>
 
               <Grid item>

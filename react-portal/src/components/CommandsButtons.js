@@ -86,7 +86,7 @@ export default function CommandsButtons(props) {
                     disabled={!(state?.progress === 100)}
                     onClick={() => send('takeoff')}
                   >
-                    Takeoff
+                    Launch
                   </Button>
                   <Button
                     disabled={!(state?.progress === 100)}
@@ -108,7 +108,7 @@ export default function CommandsButtons(props) {
                     disabled={!(state?.progress === 100)}
                     onClick={() => send('up 100')}
                   >
-                    Up 100
+                    Up
                   </Button>
                   <Button
                     disabled={!(state?.progress === 100)}
@@ -127,13 +127,13 @@ export default function CommandsButtons(props) {
                     disabled={!(state?.progress === 100)}
                     onClick={() => send('down 100')}
                   >
-                    Down 100
+                    Down
                   </Button>
                   <Button
                     disabled={!(state?.progress === 100)}
                     onClick={() => send('ccw 90')}
                   >
-                    Rotate CCW 90
+                    Rotate CCW 90°
                   </Button>
                 </ButtonGroup>
               </Grid>
@@ -150,25 +150,25 @@ export default function CommandsButtons(props) {
                 disabled={!(state?.progress === 100)}
                 onClick={() => send('forward 100')}
               >
-                Fwd 100
+                Fwd
               </Button>
               <Button
                 disabled={!(state?.progress === 100)}
                 onClick={() => send('back 100')}
               >
-                Bwd 100
+                Bwd
               </Button>
               <Button
                 disabled={!(state?.progress === 100)}
                 onClick={() => send('left 100')}
               >
-                Left 100
+                Left
               </Button>
               <Button
                 disabled={!(state?.progress === 100)}
                 onClick={() => send('right 100')}
               >
-                Rigth 100
+                Right
               </Button>
             </ButtonGroup>
           </Grid>
