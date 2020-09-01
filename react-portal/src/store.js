@@ -8,7 +8,7 @@ const initialState = {
   strings: {},
   password: '',
   name: `Player`,
-  server: 0,
+  server: 'wss://',
   servers: [],
   emoji: {
     id: 'sunglasses',

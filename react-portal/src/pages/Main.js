@@ -54,9 +54,14 @@ export default function SimpleContainer() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const password = urlParams.get('password');
+    const server = urlParams.get('server');
     dispatch({
       type: 'set-password',
       value: password,
+    });
+    dispatch({
+      type: 'set-server',
+      value: `wss://${server}`,
     });
     fetch('./config.json')
       .then((response) => response.json())

@@ -8,6 +8,7 @@ Marco Martinez - markwinap@gmail.com
 
 // Env variables
 require('dotenv').config();
+const https = require('http');
 const querystring = require('querystring');
 const { exec } = require('child_process');
 // UPP
@@ -121,13 +122,19 @@ websocket.on('connection', (ws, req) => {
     console.log('WebSocket close');
   });
 });
-
+const disconnectUDPServers = () => {
+  console.log('disconnectUDPServers');
+  udpStatus = false;
+  mainSocket.close();
+  statusSocket.close();
+  videoSocket.close();
+};
 function bindMainEvents(socket) {
   // UDP CLIENT SERVER
   socket.on('error', (err) => {
     console.log(`ERROR :\n${err.stack}`);
     udpStatus = false;
-    mainSocket.close();
+    disconnectUDPServers();
   });
   socket.on('message', (msg, rinfo) => {
     // UNCOMNET FOR DEBUG
@@ -153,7 +160,7 @@ function bindStatusEvents(socket) {
   socket.on('error', (err) => {
     console.log(`STATUS ERROR :\n${err.stack}`);
     udpStatus = false;
-    statusSocket.close();
+    disconnectUDPServers();
   });
   socket.on('listening', () => {
     const address = statusSocket.address();
@@ -181,7 +188,7 @@ function bindVideoEvents(socket) {
   socket.on('error', (err) => {
     console.log(`STATUS ERROR :\n${err.stack}`);
     udpStatus = false;
-    videoSocket.close();
+    disconnectUDPServers();
   });
   socket.on('listening', () => {
     const address = statusSocket.address();
@@ -263,13 +270,7 @@ const connectUDPServers = async () => {
     })
   );
 };
-const disconnectUDPServers = () => {
-  console.log('disconnectUDPServers');
-  udpStatus = false;
-  mainSocket.close();
-  statusSocket.close();
-  videoSocket.close();
-};
+
 const checkUDP = async () => {
   if (wifiStatus && !udpStatus) {
     console.log('CONNECT SERVER');
@@ -287,11 +288,47 @@ const checkUDP = async () => {
     );
   }
 };
+// HTTP
+function getHttp(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      res.setEncoding('utf8');
+      let body = '';
+      res.on('data', (data) => {
+        body += data;
+      });
+      res.on('end', () => {
+        body = JSON.parse(body);
+        resolve(body);
+      });
+      res.on('error', (e) => {
+        reject(e.message);
+      });
+    });
+  });
+}
+
 const main = async () => {
-  const mainInt = setInterval(async () => {
-    checkWIFI();
-    checkUDP();
-  }, process.env.WIFI_SCAN_INTERVAL);
+  try {
+    const url = 'http://localhost:4040/api/tunnels';
+    const ngrok = await getHttp(url);
+    if (ngrok.tunnels) {
+      const conections = ngrok.tunnels.filter((e) => e.proto === 'https')[0];
+      console.log('#################SERVER###############');
+      console.log(
+        `${process.env.HOST}?password=${
+          process.env.PASSWORD
+        }&server=${conections.public_url.replace('https://', '')}`
+      );
+    }
+
+    const mainInt = setInterval(async () => {
+      checkWIFI();
+      checkUDP();
+    }, process.env.WIFI_SCAN_INTERVAL);
+  } catch (err) {
+    console.log(err);
+  }
 };
 main();
 

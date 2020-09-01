@@ -19,6 +19,7 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
+  Grid,
 } from '@material-ui/core';
 
 //Store
@@ -114,13 +115,10 @@ export default function WelcomeDialog(props) {
 
   const connectWS = () => {
     console.log('Connecting To WS');
-    console.log(state?.servers[state?.server].address);
+    console.log(state?.server);
     setConnectBtn(true);
     setVideo();
-    setWS(
-      `${state?.servers[state?.server].address}?password=${state?.password}`,
-      true
-    );
+    setWS(`${state?.server}?password=${state?.password}`, true);
     getWS().addEventListener('open', (e) => {
       console.log('OPEN');
       sendWS({
@@ -206,32 +204,59 @@ export default function WelcomeDialog(props) {
         open={!state?.status}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        fullWidth
+        maxWidth="sm"
       >
         <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {description}
           </DialogContentText>
-          <IconButton
-            aria-label="emoji_icon"
-            onClick={() => setOpenEmoji(true)}
-          >
-            {state?.emoji?.native}
-          </IconButton>
-          <TextField
-            id="standard-basic"
-            label="Name"
-            value={state?.name}
-            onChange={(e) => {
-              const _name = e.currentTarget.value;
-              console.log(_name);
-              setName(_name);
-              dispatch({
-                type: 'set-name',
-                value: _name,
-              });
-            }}
-          />
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <IconButton
+                aria-label="emoji_icon"
+                onClick={() => setOpenEmoji(true)}
+              >
+                {state?.emoji?.native}
+              </IconButton>
+              <TextField
+                id="user-name"
+                label="Name"
+                value={state?.name}
+                onChange={(e) => {
+                  const _name = e.currentTarget.value;
+                  console.log(_name);
+                  setName(_name);
+                  dispatch({
+                    type: 'set-name',
+                    value: _name,
+                  });
+                }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              {' '}
+              <TextField
+                id="server-name"
+                label="Server"
+                value={state?.server}
+                disabled
+                fullWidth
+                onChange={(e) => {
+                  const _server = e.currentTarget.value;
+                  console.log(_server);
+                  setName(_server);
+                  dispatch({
+                    type: 'set-server',
+                    value: _server,
+                  });
+                }}
+              />
+            </Grid>
+          </Grid>
+
+          {/*
           <FormControl className={classes.formControl}>
             <InputLabel>Server</InputLabel>
             <Select
@@ -256,6 +281,7 @@ export default function WelcomeDialog(props) {
               ))}
             </Select>
           </FormControl>
+*/}
         </DialogContent>
         <DialogActions>
           <Button
