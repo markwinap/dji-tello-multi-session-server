@@ -115,10 +115,10 @@ export default function WelcomeDialog(props) {
 
   const connectWS = () => {
     console.log('Connecting To WS');
-    console.log(state?.server);
+    console.log(`${state?.server}?password=${state?.password}`);
     setConnectBtn(true);
     setVideo();
-    setWS(`${state?.server}?password=${state?.password}`, true);
+    setWS(`${state?.server}?password=${state?.password}`);
     getWS().addEventListener('open', (e) => {
       console.log('OPEN');
       sendWS({
@@ -136,10 +136,14 @@ export default function WelcomeDialog(props) {
       //setSnackbarMsg('Socket Connected');
     });
     getWS().addEventListener('message', (e) => {
+      console.log('getWS message');
+      console.log('getWS message', e.data);
+      console.log('getWS message', e.data instanceof Blob);
       if (e.data instanceof Blob) {
         sendFrame(e.data);
       } else {
         const _data = JSON.parse(e.data);
+        console.log('getWS message', _data);
         if (_data.name === 'bat') {
           dispatch({
             type: 'set-battery',

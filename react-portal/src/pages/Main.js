@@ -70,7 +70,7 @@ export default function SimpleContainer() {
     });
     dispatch({
       type: 'set-server',
-      value: `wss://${server}`,
+      value: `ws://${server}`,
     });
     fetch('./config.json')
       .then((response) => response.json())
@@ -89,7 +89,7 @@ export default function SimpleContainer() {
     return () => {
       //subscription.unsubscribe();
     };
-  }, [dispatch]);
+  }, []);
 
   return (
     <>
@@ -118,12 +118,19 @@ export default function SimpleContainer() {
             ></video>
           </Grid>
           <Grid className={classes.col} item lg={4} md={4} xs={12}>
-            <Grid
-              className={classes.container}
-              direction="column"
-              justify="space-between"
-              alignItems="stretch"
-            >
+            <Grid item>
+              <LinearProgress
+                color="secondary"
+                variant="determinate"
+                value={state?.progress}
+              />
+              <Grid
+                className={classes.container}
+                direction="column"
+                justify="space-between"
+                alignItems="stretch"
+              >
+                {/*
               <Grid item>
                 <BattStatus
                   title={state.status ? 'Online' : 'Offline'}
@@ -131,30 +138,27 @@ export default function SimpleContainer() {
                   level={state.battery}
                 />
               </Grid>
+  */}
+                <CommandsTextBox />
+              </Grid>
+
+              <Grid item>
+                <CommandsButtons />
+              </Grid>
+
               <Grid item>
                 <Paper
                   style={{
-                    backgroundColor: '#bdbdbd',
+                    backgroundColor: '#f7f7f7',
                   }}
                 >
                   <CommandsQueue
                     messages={state.messageQueue}
-                    //title="Messages"
-                    //titleSize="h5"
+                    title=""
+                    titleSize="h5"
                     userId={0}
                   />
                 </Paper>
-              </Grid>
-              <Grid item>
-                <LinearProgress
-                  color="secondary"
-                  variant="determinate"
-                  value={state?.progress}
-                />
-                <CommandsTextBox />
-              </Grid>
-              <Grid item>
-                <CommandsButtons />
               </Grid>
             </Grid>
           </Grid>

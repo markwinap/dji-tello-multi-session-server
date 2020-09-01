@@ -4,7 +4,7 @@ import React, { createContext, useReducer } from 'react';
 const initialState = {
   progress: 100,
   ws: null,
-  welcomeDialog: false,
+  welcomeDialog: true,
   strings: {},
   password: '',
   name: `Player`,
@@ -15,7 +15,7 @@ const initialState = {
     name: 'Smiling Face with Sunglasses',
     native: '😎',
   },
-  status: true,
+  status: false,
   battery: -1,
   messageQueue: [],
 };

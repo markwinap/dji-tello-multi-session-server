@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
   },
   newRoot: {
-    //height: 'calc(100% - 50px)',
+    height: 350,
     //backgroundColor: '#e7e7e7',
     width: '100%',
   },
@@ -37,30 +37,17 @@ export default function CommandsQueue(props) {
   const matches700 = useMediaQuery('(min-height:700px)');
   const matches600 = useMediaQuery('(min-height:600px)');
 
-  console.log('#################');
-  console.log(matches1000);
-  console.log(matches900);
-  console.log(matches800);
-  console.log(matches700);
-  console.log(matches600);
-
   useEffect(() => {
+    setRenderBox(true);
     return () => {
       //subscription.unsubscribe();
-      setRenderBox(true);
     };
   }, []);
+
   return (
     <React.Fragment>
       <CssBaseline />
-      <Typography
-        className={classes.title}
-        style={{
-          height: matches800 ? 600 : 340,
-        }}
-        variant={titleSize}
-        gutterBottom
-      >
+      <Typography className={classes.title} variant={titleSize} gutterBottom>
         {title}
       </Typography>
       {renderBox ? (
