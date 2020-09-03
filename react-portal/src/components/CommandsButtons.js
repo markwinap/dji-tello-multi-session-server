@@ -1,8 +1,27 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Button, ButtonGroup } from '@material-ui/core';
-import { ErrorOutline } from '@material-ui/icons';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import {
+  Grid,
+  Button,
+  ButtonGroup,
+  IconButton,
+  Switch,
+  FormControlLabel,
+  FormGroup,
+} from '@material-ui/core';
+import {
+  ErrorOutline,
+  KeyboardArrowUp,
+  KeyboardArrowRight,
+  KeyboardArrowDown,
+  KeyboardArrowLeft,
+  RotateLeft,
+  RotateRight,
+} from '@material-ui/icons';
+
+import { orange } from '@material-ui/core/colors';
+
 //Store
 import { store } from '../store.js';
 //Hooks
@@ -36,11 +55,27 @@ const useStyles = makeStyles((theme) => ({
   buttonMargin: {
     marginBottom: 10,
   },
+  toggle: {
+    textAlign: 'center',
+    color: 'white',
+    whiteSpace: 'nowrap',
+  },
 }));
+
+const ColorButton = withStyles((theme) => ({
+  root: {
+    color: theme.palette.getContrastText(orange[500]),
+    backgroundColor: orange[500],
+    '&:hover': {
+      backgroundColor: orange[700],
+    },
+  },
+}))(Button);
 
 export default function CommandsButtons(props) {
   const classes = useStyles();
   const globalState = useContext(store);
+  const [toggle, setToggle] = useState(false);
   const { dispatch, state } = globalState;
   const [getWS, setWS, sendWS] = useWS();
   const [setTimer] = useTimer();
@@ -63,114 +98,143 @@ export default function CommandsButtons(props) {
         <Grid
           container
           direction="column"
-          justify="center"
+          justify="flex-start"
           alignItems="stretch"
-          spacing={2}
+          spacing={1}
         >
-          <Grid item xs={12}>
+          <Grid item>
             <Grid
               container
               direction="row"
               justify="center"
               alignItems="flex-end"
-              spacing={2}
+              spacing={1}
             >
-              <Grid item xs={6}>
-                <ButtonGroup
+              <Grid item xs={4}>
+                <ColorButton
                   fullWidth
                   size="large"
                   color="default"
                   variant="contained"
+                  disabled={!(state?.progress === 100)}
+                  onClick={() => send('takeoff')}
                 >
-                  <Button
-                    disabled={!(state?.progress === 100)}
-                    onClick={() => send('takeoff')}
-                  >
-                    Launch
-                  </Button>
-                  <Button
-                    disabled={!(state?.progress === 100)}
-                    onClick={() => send('land')}
-                  >
-                    Land
-                  </Button>
-                </ButtonGroup>
+                  Launch
+                </ColorButton>
               </Grid>
-              <Grid item xs={6}>
-                <ButtonGroup
+              <Grid item xs={4} className={classes.toggle}>
+                45
+                <Switch
+                  checked={toggle}
+                  onChange={() => setToggle(!toggle)}
+                  name="checkedA"
+                />
+                90
+              </Grid>
+              <Grid item xs={4}>
+                <ColorButton
                   fullWidth
-                  size="medium"
+                  size="large"
                   color="default"
                   variant="contained"
-                  className={classes.buttonMargin}
+                  disabled={!(state?.progress === 100)}
+                  onClick={() => send('land')}
                 >
-                  <Button
-                    disabled={!(state?.progress === 100)}
-                    onClick={() => send('up 100')}
-                  >
-                    Up
-                  </Button>
-                  <Button
-                    disabled={!(state?.progress === 100)}
-                    onClick={() => send('cw 90')}
-                  >
-                    Rotate CW 90°
-                  </Button>
-                </ButtonGroup>
-                <ButtonGroup
+                  Land
+                </ColorButton>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item>
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="flex-end"
+              spacing={1}
+            >
+              <Grid item xs={4}>
+                <Button
                   fullWidth
-                  size="medium"
+                  size="large"
                   color="default"
                   variant="contained"
+                  disabled={!(state?.progress === 100)}
+                  onClick={() => send(`ccw ${toggle ? '90' : '45'}`)}
+                  startIcon={<RotateLeft />}
                 >
-                  <Button
-                    disabled={!(state?.progress === 100)}
-                    onClick={() => send('down 100')}
-                  >
-                    Down
-                  </Button>
-                  <Button
-                    disabled={!(state?.progress === 100)}
-                    onClick={() => send('ccw 90')}
-                  >
-                    Rotate CCW 90°
-                  </Button>
-                </ButtonGroup>
+                  {toggle ? '90' : '45'}°
+                </Button>
+              </Grid>
+              <Grid item xs={4}>
+                <Button
+                  fullWidth
+                  size="large"
+                  color="primary"
+                  variant="contained"
+                  disabled={!(state?.progress === 100)}
+                  onClick={() => send(`forward ${toggle ? '100' : '50'}`)}
+                  startIcon={<KeyboardArrowUp />}
+                ></Button>
+              </Grid>
+              <Grid item xs={4}>
+                <Button
+                  fullWidth
+                  size="large"
+                  color="default"
+                  variant="contained"
+                  disabled={!(state?.progress === 100)}
+                  onClick={() => send(`cw ${toggle ? '90' : '45'}`)}
+                  startIcon={<RotateRight />}
+                >
+                  {toggle ? '90' : '45'}°
+                </Button>
               </Grid>
             </Grid>
           </Grid>
           <Grid item>
-            <ButtonGroup
-              fullWidth
-              size="large"
-              color="primary"
-              variant="contained"
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="flex-end"
+              spacing={1}
             >
-              <Button
-                disabled={!(state?.progress === 100)}
-                onClick={() => send('forward 100')}
-              >
-                Fwd
-              </Button>
-              <Button
-                disabled={!(state?.progress === 100)}
-                onClick={() => send('back 100')}
-              >
-                Bwd
-              </Button>
-              <Button
-                disabled={!(state?.progress === 100)}
-                onClick={() => send('left 100')}
-              >
-                Left
-              </Button>
-              <Button
-                disabled={!(state?.progress === 100)}
-                onClick={() => send('right 100')}
-              >
-                Right
-              </Button>
-            </ButtonGroup>
+              <Grid item xs={4}>
+                <Button
+                  fullWidth
+                  size="large"
+                  color="primary"
+                  variant="contained"
+                  disabled={!(state?.progress === 100)}
+                  onClick={() => send(`left ${toggle ? '100' : '50'}`)}
+                  startIcon={<KeyboardArrowLeft />}
+                ></Button>
+              </Grid>
+              <Grid item xs={4}>
+                <Button
+                  fullWidth
+                  size="large"
+                  color="primary"
+                  variant="contained"
+                  disabled={!(state?.progress === 100)}
+                  onClick={() => send(`down ${toggle ? '100' : '50'}`)}
+                  startIcon={<KeyboardArrowDown />}
+                ></Button>
+              </Grid>
+              <Grid item xs={4}>
+                <Button
+                  fullWidth
+                  size="large"
+                  color="primary"
+                  variant="contained"
+                  disabled={!(state?.progress === 100)}
+                  onClick={() => send(`right ${toggle ? '100' : '50'}`)}
+                  startIcon={<KeyboardArrowRight />}
+                ></Button>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item>
             <Button

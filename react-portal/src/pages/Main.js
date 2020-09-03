@@ -47,6 +47,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     width: '100%',
     height: '100%',
+    paddingLeft: 10,
   },
   video: {
     width: '100%',
@@ -106,31 +107,38 @@ export default function SimpleContainer() {
             : 'Change your name, emoji, and set the correct server!'
         }`}
       />
-      <Container disableGutters maxWidth="false" className={classes.box}>
-        <Grid className={classes.container} container spacing={2}>
-          <Grid item lg={8} md={8} xs={12}>
-            <video
-              className={classes.video}
-              controls
-              autoPlay
-              id="player"
-              //ref={refVideo}
-            ></video>
-          </Grid>
-          <Grid className={classes.col} item lg={4} md={4} xs={12}>
-            <Grid item>
-              <LinearProgress
-                color="secondary"
-                variant="determinate"
-                value={state?.progress}
-              />
-              <Grid
-                className={classes.container}
-                direction="column"
-                justify="space-between"
-                alignItems="stretch"
-              >
-                {/*
+
+      <Grid
+        className={classes.container}
+        container
+        direction="row"
+        justify="center"
+        alignItems="stretch"
+        spacing={1}
+      >
+        <Grid item lg={9} md={9} xs={12}>
+          <video
+            className={classes.video}
+            controls
+            autoPlay
+            id="player"
+            //ref={refVideo}
+          ></video>
+        </Grid>
+        <Grid item lg={3} md={3} xs={12}>
+          <Grid item>
+            <LinearProgress
+              color="secondary"
+              variant="determinate"
+              value={state?.progress}
+            />
+            <Grid
+              className={classes.container}
+              direction="column"
+              justify="space-between"
+              alignItems="stretch"
+            >
+              {/*
               <Grid item>
                 <BattStatus
                   title={state.status ? 'Online' : 'Offline'}
@@ -139,34 +147,33 @@ export default function SimpleContainer() {
                 />
               </Grid>
   */}
-              </Grid>
+            </Grid>
 
-              <Grid item>
-                <CommandsButtons />
-              </Grid>
+            <Grid item>
+              <CommandsButtons />
+            </Grid>
 
-              <Grid item>
-                <CommandsTextBox />
-              </Grid>
+            <Grid item>
+              <CommandsTextBox />
+            </Grid>
 
-              <Grid item>
-                <Paper
-                  style={{
-                    backgroundColor: '#f7f7f7',
-                  }}
-                >
-                  <CommandsQueue
-                    messages={state.messageQueue}
-                    title=""
-                    titleSize="h5"
-                    userId={0}
-                  />
-                </Paper>
-              </Grid>
+            <Grid item>
+              <Paper
+                style={{
+                  backgroundColor: '#f7f7f7',
+                }}
+              >
+                <CommandsQueue
+                  messages={state.messageQueue}
+                  title=""
+                  titleSize="h5"
+                  userId={0}
+                />
+              </Paper>
             </Grid>
           </Grid>
         </Grid>
-      </Container>
+      </Grid>
     </>
   );
 }
