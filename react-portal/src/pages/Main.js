@@ -19,7 +19,7 @@ import CommandsQueue from '../components/CommandsQueue';
 import CommandsTextBox from '../components/CommandsTextBox';
 import CommandsButtons from '../components/CommandsButtons';
 import WelcomeDialog from '../components/WelcomeDialog';
-
+import ExtraButtons from '../components/ExtraButtons';
 //Store
 import { store } from '../store.js';
 
@@ -170,6 +170,9 @@ export default function SimpleContainer() {
                   userId={0}
                 />
               </Paper>
+            </Grid>
+            <Grid item>
+              <ExtraButtons />
             </Grid>
           </Grid>
         </Grid>
