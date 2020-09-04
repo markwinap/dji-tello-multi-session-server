@@ -12,18 +12,21 @@ function useVideo() {
     refJmuxer.current = new JMuxer({
       node: 'player',
       mode: 'video',
-      flushingTime: 10,
-      fps: 30,
+      flushingTime: 0,
+      //fps: 30,
       debug: false,
     });
   };
   const sendFrame = async (value) => {
     refJmuxer.current.feed({
       video: new Uint8Array(await new Response(value).arrayBuffer()),
-      duration: 100,
+      duration: 500,
     });
   };
-  return [setVideo, sendFrame];
+  const destroyVideo = () => {
+    refJmuxer.current.destroy();
+  };
+  return [setVideo, sendFrame, destroyVideo];
 }
 
 export default useVideo;

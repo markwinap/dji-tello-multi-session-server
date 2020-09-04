@@ -11,11 +11,13 @@ function useWS() {
     return refWS.current;
   };
   const setWS = (value) => {
-    console.log('setWS');
-    console.log('setWS', value);
-    console.log('setWS', state?.ws);
-    console.log('setWS', refWS.current);
-    if (state?.ws) {
+    if (value) {
+      refWS.current = new WebSocket(value);
+      dispatch({
+        type: 'set-ws',
+        value: refWS.current,
+      });
+    } else if (state?.ws) {
       refWS.current = state?.ws;
     } else {
       refWS.current = new WebSocket(value);

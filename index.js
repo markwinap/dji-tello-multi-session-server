@@ -58,6 +58,9 @@ function sendWS(data) {
     if (client.isAlive === false) {
       client.terminate();
     }
+    if (client.bufferedAmount > 0) {
+      console.log(client.bufferedAmount);
+    }
     if (client.readyState === 1 && client.bufferedAmount === 0) {
       try {
         client.send(data); // SEND OVER WEBSOCKET
@@ -202,7 +205,7 @@ function bindVideoEvents(socket) {
       // FIND IF FIRST PART OF FRAME
       counter += 1;
       videoBuff.push(frame);
-      if (counter === 3) {
+      if (counter === 15) {
         // COLLECT 3 FRAMES AND SEND TO WEBSOCKET
         // sendWS(JSON.stringify({ video: Buffer.concat(videoBuff) }));
         // sendWS( Buffer.concat(videoBuff));

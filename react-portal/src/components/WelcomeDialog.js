@@ -59,6 +59,7 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
 }
 
+let videoEnabled = false;
 export default function WelcomeDialog(props) {
   const { title, description } = props;
   const classes = useStyles();
@@ -78,7 +79,7 @@ export default function WelcomeDialog(props) {
   const [connectBtn, setConnectBtn] = useState(false);
 
   const [getWS, setWS, sendWS] = useWS();
-  const [setVideo, sendFrame] = useVideo();
+  const [setVideo, sendFrame, destroyVideo] = useVideo();
 
   useEffect(() => {
     console.log('WELCOME BOX');
@@ -109,7 +110,7 @@ export default function WelcomeDialog(props) {
       });
     }
     return () => {
-      //subscription.unsubscribe();
+      destroyVideo();
     };
   }, []);
 
@@ -117,7 +118,7 @@ export default function WelcomeDialog(props) {
     console.log('Connecting To WS');
     console.log(`${state?.server}?password=${state?.password}`);
     setConnectBtn(true);
-    setVideo();
+
     setWS(`${state?.server}?password=${state?.password}`);
     getWS().addEventListener('open', (e) => {
       console.log('OPEN');
@@ -137,6 +138,11 @@ export default function WelcomeDialog(props) {
     });
     getWS().addEventListener('message', (e) => {
       if (e.data instanceof Blob) {
+        if (!videoEnabled) {
+          console.log('Enable Video');
+          videoEnabled = true;
+          setVideo();
+        }
         sendFrame(e.data);
       } else {
         const _data = JSON.parse(e.data);
