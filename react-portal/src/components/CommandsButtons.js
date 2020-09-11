@@ -219,7 +219,7 @@ export default function CommandsButtons(props) {
                   color="primary"
                   variant="contained"
                   disabled={!(state?.progress === 100)}
-                  onClick={() => send(`down ${toggle ? '100' : '50'}`)}
+                  onClick={() => send(`back ${toggle ? '100' : '50'}`)}
                   startIcon={<KeyboardArrowDown />}
                 ></Button>
               </Grid>
