@@ -60,7 +60,9 @@ const useStyles = makeStyles((theme) => ({
     float: 'right',
     position: 'absolute',
     zIndex: 9,
-    width: '10%',
+    width: '20%',
+    marginTop: 20,
+    marginLeft: 10,
   },
 }));
 
