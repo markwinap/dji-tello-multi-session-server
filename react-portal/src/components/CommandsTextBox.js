@@ -10,6 +10,10 @@ import { store } from '../store.js';
 //Hooks
 import useWS from '../hooks/WS';
 import useTimer from '../hooks/Timer';
+//Custom Components
+import SnackNotificaiton from './snackNotificaiton';
+//Custom Components
+import { commandList, commands, commandsIgnore } from './CMDList';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,57 +49,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const commandList = [
-  {
-    name: 'takeoff',
-  },
-  {
-    name: 'land',
-  },
-  {
-    name: 'emergency',
-  },
-  {
-    name: 'up 50',
-  },
-  {
-    name: 'down 50',
-  },
-  {
-    name: 'left 50',
-  },
-  {
-    name: 'right 50',
-  },
-  {
-    name: 'forward 50',
-  },
-  {
-    name: 'back 50',
-  },
-  {
-    name: 'flip l',
-  },
-  {
-    name: 'flip r',
-  },
-  {
-    name: 'flip f',
-  },
-  {
-    name: 'flip b',
-  },
-  {
-    name: 'cw 45',
-  },
-  {
-    name: 'go ',
-  },
-  {
-    name: '#',
-  },
-];
-
 const ColorButton = withStyles((theme) => ({
   root: {
     color: theme.palette.getContrastText(green[500]),
@@ -109,8 +62,41 @@ const ColorButton = withStyles((theme) => ({
   },
 }))(Button);
 
+function validateInput(txt) {
+  let res = false;
+  const arr = txt.trim().split(' ');
+  if (commandsIgnore.includes(arr[0])) {
+    return txt;
+  }
+  const cmd = commands.find((e) => e.cmd === arr[0]);
+  if (cmd) {
+    arr.shift();
+    if (cmd.hasOwnProperty('range')) {
+      for (let i of arr) {
+        if (cmd.range.includes(i)) {
+          return `${cmd.cmd} ${i}`;
+          break;
+        }
+      }
+    }
+    for (let i of arr) {
+      const n = parseInt(i, 10);
+      if (n) {
+        res = n;
+        if (n > cmd.min && n < cmd.max) {
+          return `${cmd.cmd} ${n}`;
+          break;
+        }
+      }
+    }
+  }
+  return res;
+}
+
 export default function CommandsTextBox(props) {
   const [textBox, setTextBox] = useState('');
+  const [snack, setSnack] = useState(false);
+  const [snakMessage, setSnakMessage] = useState('');
   const [autoComplete, setAutoComplete] = useState({
     name: '',
   });
@@ -168,17 +154,28 @@ export default function CommandsTextBox(props) {
               disabled={!(state?.progress === 100)}
               onClick={() => {
                 if (textBox !== '') {
-                  setTimer(process.env.REACT_APP_TEXT_TIMEOUT);
-                  setWS();
-                  sendWS({
-                    name: state?.name,
-                    emoji: state?.emoji?.native,
-                    msg: textBox,
-                  });
+                  const cleanCmd = validateInput(textBox);
+                  if (cleanCmd) {
+                    setTimer(process.env.REACT_APP_TEXT_TIMEOUT);
+                    setWS();
+                    sendWS({
+                      name: state?.name,
+                      emoji: state?.emoji?.native,
+                      msg: textBox,
+                    });
+                  } else {
+                    console.log('Invalid Input');
+                    setSnakMessage('Invalid Input');
+                    setSnack(true);
+                  }
+
                   setTextBox('');
                   setAutoComplete({
                     name: '',
                   });
+                } else {
+                  setSnakMessage('Empty Input');
+                  setSnack(true);
                 }
               }}
               //className={classes.buttonSend}
@@ -188,6 +185,11 @@ export default function CommandsTextBox(props) {
             </ColorButton>
           </Grid>
         </Grid>
+        <SnackNotificaiton
+          snack={snack}
+          setSnack={setSnack}
+          snakMessage={snakMessage}
+        />
       </div>
     </React.Fragment>
   );
