@@ -4,8 +4,8 @@ import React, { createContext, useReducer } from 'react';
 const initialState = {
   progress: 100,
   ws: null,
-  welcomeDialog: !true, //true
-  status: !false, //false
+  welcomeDialog: true, //true
+  status: false, //false
   strings: {},
   password: '',
   name: `Player`,
