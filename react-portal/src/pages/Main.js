@@ -22,8 +22,6 @@ import WelcomeDialog from '../components/WelcomeDialog';
 import ExtraButtons from '../components/ExtraButtons';
 //Store
 import { store } from '../store.js';
-//Other
-import logo from '../logo.png';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -128,7 +126,6 @@ export default function SimpleContainer() {
         spacing={1}
       >
         <Grid item lg={9} md={9} xs={12}>
-          <img className={classes.logo} src={logo} alt="Logo" />
           <video
             className={classes.video}
             controls

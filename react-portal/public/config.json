@@ -6,7 +6,7 @@
         {"name": "ServerD", "address": "ws://3.tcp.ngrok.io:23502"}
     ],
     "strings":{
-        "welcomeTitle": "Welcome to Reybotics virtual camp",
+        "welcomeTitle": "Welcome to Tello Multisession",
         "welcomeDescription": "Change your name, emoji!"
     }
 }
